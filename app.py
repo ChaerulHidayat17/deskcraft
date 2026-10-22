@@ -234,7 +234,7 @@ foreach ($pkg in $packages) {{
     $pName = $pkg.name
     Write-Host "  [$count/$($packages.Count)] Memasang $pName ($packageId)..." -ForegroundColor White -NoNewline
     
-    $proc = Start-Process -FilePath "winget" -ArgumentList "install --id `"$packageId`" --exact --silent --accept-package-agreements --accept-source-agreements --disable-interactivity" -Wait -PassThru -NoNewWindow
+    $proc = Start-Process -FilePath "winget" -ArgumentList "install --id `"$packageId`" --exact --silent --accept-package-agreements --accept-source-agreements --disable-interactivity --ignore-security-hash" -Wait -PassThru -NoNewWindow
     
     if ($proc.ExitCode -eq 0 -or $proc.ExitCode -eq 3010 -or $proc.ExitCode -eq -1978335189) {{
         Write-Host " [BERHASIL]" -ForegroundColor Green
