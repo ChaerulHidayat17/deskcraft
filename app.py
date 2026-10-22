@@ -114,11 +114,15 @@ def build_ps1(apps_str: str, tz: str = "WIB", dns: str = "cloudflare", pc_name: 
 # Target Server: {protocol}://{server_host}
 # ==============================================================================
 
-# 0. PRIVILEGE & ZERO-TOUCH ENVIRONMENT SETUP
+# 0. PRIVILEGE, TLS & UNIVERSAL RUNTIME SETUP
+try {{
+    [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12 -bor [Net.SecurityProtocolType]::Tls13
+}} catch {{}}
+
 $isAdmin = ([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)
 if (-not $isAdmin) {{
     Write-Host "[AutoDeploy IT] Mengaktifkan hak akses Administrator otomatis..." -ForegroundColor Yellow
-    $elevateCmd = "& {{ [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12; irm '{run_url}' | iex }}"
+    $elevateCmd = "& {{ [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12 -bor [Net.SecurityProtocolType]::Tls13; irm '{run_url}' | iex }}"
     Start-Process powershell.exe -ArgumentList "-NoProfile -ExecutionPolicy Bypass -NoExit -Command `"$elevateCmd`"" -Verb RunAs
     exit
 }}
@@ -148,12 +152,14 @@ Write-Host "-----------------------------------------------------------------" -
 $startTime = [System.Diagnostics.Stopwatch]::StartNew()
 $results = @()
 
-# 1. OPTIMIZE POWER PLAN (Prevent sleep during setup)
+# 1. OPTIMIZE POWER PLAN (Prevent sleep during setup on AC & Battery)
 try {{
     Write-Host "[1/5] Mengatur Power Plan (Mencegah sleep saat instalasi)..." -ForegroundColor Cyan
     powercfg /change standby-timeout-ac 0 2>$null
+    powercfg /change standby-timeout-dc 0 2>$null
     powercfg /change monitor-timeout-ac 15 2>$null
-    Write-Host "      Power plan berhasil dioptimalkan." -ForegroundColor Green
+    powercfg /change monitor-timeout-dc 15 2>$null
+    Write-Host "      Power plan berhasil dioptimalkan (AC & Baterai Laptop)." -ForegroundColor Green
 }} catch {{}}
 
 # 2. CONFIGURE TIMEZONE
@@ -175,7 +181,10 @@ try {{
     if dns == "cloudflare":
         script += """try {
     Write-Host "[3/5] Mengatur DNS Berkecepatan Tinggi (Cloudflare 1.1.1.1)..." -ForegroundColor Cyan
-    $adapters = Get-NetAdapter | Where-Object { $_.Status -eq 'Up' }
+    $adapters = Get-NetAdapter -ErrorAction SilentlyContinue | Where-Object { 
+        $_.Status -eq 'Up' -and 
+        $_.InterfaceDescription -notmatch 'Virtual|Hyper-V|VMware|WSL|Loopback|TAP|VPN|Bluetooth'
+    }
     foreach ($adapter in $adapters) {
         Set-DnsClientServerAddress -InterfaceAlias $adapter.Name -ServerAddresses ('1.1.1.1', '1.0.0.1') -ErrorAction SilentlyContinue
     }
@@ -187,7 +196,10 @@ try {{
     elif dns == "google":
         script += """try {
     Write-Host "[3/5] Mengatur DNS Berkecepatan Tinggi (Google 8.8.8.8)..." -ForegroundColor Cyan
-    $adapters = Get-NetAdapter | Where-Object { $_.Status -eq 'Up' }
+    $adapters = Get-NetAdapter -ErrorAction SilentlyContinue | Where-Object { 
+        $_.Status -eq 'Up' -and 
+        $_.InterfaceDescription -notmatch 'Virtual|Hyper-V|VMware|WSL|Loopback|TAP|VPN|Bluetooth'
+    }
     foreach ($adapter in $adapters) {
         Set-DnsClientServerAddress -InterfaceAlias $adapter.Name -ServerAddresses ('8.8.8.8', '8.8.4.4') -ErrorAction SilentlyContinue
     }
@@ -202,13 +214,18 @@ try {{
 
     # 4. RENAME COMPUTER IF REQUESTED
     if pc_name:
-        clean_name = pc_name.strip()
+        import re
+        clean_name = re.sub(r'[^A-Za-z0-9\-]', '', pc_name.strip())[:15]
         script += f"""try {{
-    Write-Host "[4/5] Mengubah nama komputer menjadi: {clean_name}..." -ForegroundColor Cyan
-    Rename-Computer -NewName "{clean_name}" -Force -ErrorAction SilentlyContinue
-    Write-Host "      Nama komputer diatur ke {clean_name} (efektif setelah restart)." -ForegroundColor Green
+    Write-Host "[4/5] Mengatur nama komputer menjadi: {clean_name}..." -ForegroundColor Cyan
+    if ($env:COMPUTERNAME -ne "{clean_name}") {{
+        Rename-Computer -NewName "{clean_name}" -Force -ErrorAction SilentlyContinue
+        Write-Host "      Nama komputer diatur ke {clean_name} (efektif setelah restart)." -ForegroundColor Green
+    }} else {{
+        Write-Host "      Nama komputer sudah sesuai ({clean_name})." -ForegroundColor Gray
+    }}
 }} catch {{
-    Write-Host "      Gagal mengubah nama komputer." -ForegroundColor Red
+    Write-Host "      Peringatan: Gagal mengubah nama komputer." -ForegroundColor Yellow
 }}
 """
     else:
@@ -220,18 +237,45 @@ try {{
 Write-Host "[5/5] Memulai instalasi otomatis aplikasi ({len(selected_apps)} aplikasi)..." -ForegroundColor Yellow
 $packages = {packages_ps}
 
-$wingetCmd = Get-Command winget -ErrorAction SilentlyContinue
-if (-not $wingetCmd) {{
-    Write-Host "CRITICAL ERROR: Windows Package Manager (winget) belum terpasang." -ForegroundColor Red
-    Write-Host "Silakan update App Installer via Microsoft Store terlebih dahulu." -ForegroundColor Yellow
-    Write-Host "Tekan tombol apa saja untuk keluar..." -ForegroundColor Gray
-    try {{ $null = [Console]::ReadKey($true) }} catch {{ pause }}
-    exit 1
+# Auto-detect winget in WindowsApps if not in PATH
+if (-not (Get-Command winget -ErrorAction SilentlyContinue)) {{
+    Write-Host "  -> Winget belum terdaftar di PATH. Memeriksa direktori sistem..." -ForegroundColor Yellow
+    $appDirs = @("$env:LOCALAPPDATA\\Microsoft\\WindowsApps", "C:\\Program Files\\WindowsApps")
+    foreach ($d in $appDirs) {{
+        if (Test-Path $d) {{
+            $found = Get-ChildItem -Path $d -Filter "winget.exe" -Recurse -ErrorAction SilentlyContinue | Select-Object -First 1
+            if ($found) {{
+                $env:PATH = "$($found.DirectoryName);$env:PATH"
+                Write-Host "  -> Winget ditemukan dan ditambahkan ke PATH." -ForegroundColor Green
+                break
+            }}
+        }}
+    }}
 }}
 
-# Enable InstallerHashOverride in winget if supported
+$wingetCmd = Get-Command winget -ErrorAction SilentlyContinue
+if (-not $wingetCmd) {{
+    Write-Host "  -> Winget belum terpasang. Mengunduh winget resmi otomatis dari Microsoft..." -ForegroundColor Cyan
+    try {{
+        $wingetBundle = "$env:TEMP\\winget-installer.msixbundle"
+        Invoke-WebRequest -Uri "https://aka.ms/getwinget" -OutFile $wingetBundle -UseBasicParsing -TimeoutSec 90
+        Add-AppxPackage -Path $wingetBundle -ErrorAction Stop
+        $env:PATH = "$env:LOCALAPPDATA\\Microsoft\\WindowsApps;$env:PATH"
+        Write-Host "  -> Winget berhasil dipasang otomatis!" -ForegroundColor Green
+    }} catch {{
+        Write-Host "CRITICAL ERROR: Windows Package Manager (winget) belum terpasang." -ForegroundColor Red
+        Write-Host "Silakan update App Installer via Microsoft Store terlebih dahulu." -ForegroundColor Yellow
+        Write-Host "Tekan tombol apa saja untuk keluar..." -ForegroundColor Gray
+        try {{ $null = [Console]::ReadKey($true) }} catch {{ pause }}
+        exit 1
+    }}
+}}
+
+# Enable winget features & update sources
 try {{
+    & winget source update --disable-interactivity 2>$null
     & winget settings --enable InstallerHashOverride 2>$null
+    & winget settings --enable LocalManifestFiles 2>$null
 }} catch {{}}
 
 $count = 0
@@ -396,6 +440,7 @@ async def download_bat(
     run_url = f"{proto}://{host}/run?{query}"
 
     bat_content = f"""@echo off
+chcp 65001 >nul
 title AutoDeploy IT - Zero-Touch Workstation Provisioning
 cls
 echo ====================================================================
@@ -407,13 +452,13 @@ echo [1/2] Menyiapkan hak akses Administrator otomatis...
 net session >nul 2>&1
 if %errorLevel% neq 0 (
     echo [UAC] Mengaktifkan mode Administrator...
-    powershell -NoProfile -Command "Start-Process '%~f0' -Verb RunAs"
+    powershell -NoProfile -ExecutionPolicy Bypass -Command "Start-Process cmd.exe -ArgumentList '/c \"\"%~f0\"\"' -Verb RunAs"
     exit /b
 )
 
 echo [2/2] Hak Administrator aktif! Memulai instalasi otomatis...
 echo.
-powershell -NoProfile -ExecutionPolicy Bypass -NoExit -Command "[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12; irm '{run_url}' | iex"
+powershell -NoProfile -ExecutionPolicy Bypass -NoExit -Command "[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12 -bor [Net.SecurityProtocolType]::Tls13; irm '{run_url}' | iex"
 echo.
 echo ====================================================================
 echo Setup telah selesai!
