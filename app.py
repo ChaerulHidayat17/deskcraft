@@ -229,6 +229,11 @@ if (-not $wingetCmd) {{
     exit 1
 }}
 
+# Enable InstallerHashOverride in winget if supported
+try {{
+    & winget settings --enable InstallerHashOverride 2>$null
+}} catch {{}}
+
 $count = 0
 foreach ($pkg in $packages) {{
     $count++
@@ -236,7 +241,15 @@ foreach ($pkg in $packages) {{
     $pName = $pkg.name
     Write-Host "  [$count/$($packages.Count)] Memasang $pName ($packageId)..." -ForegroundColor White -NoNewline
     
-    $proc = Start-Process -FilePath "winget" -ArgumentList "install --id `"$packageId`" --exact --silent --accept-package-agreements --accept-source-agreements --disable-interactivity --ignore-security-hash" -Wait -PassThru -NoNewWindow
+    $installArgs = @("install", "--id", $packageId, "--exact", "--silent", "--accept-package-agreements", "--accept-source-agreements", "--disable-interactivity")
+    $proc = Start-Process -FilePath "winget" -ArgumentList $installArgs -Wait -PassThru -NoNewWindow
+    
+    # If failed due to hash mismatch (Exit code -1978335215), retry with hash override
+    if ($proc.ExitCode -eq -1978335215) {{
+        try {{ & winget settings --enable InstallerHashOverride 2>$null }} catch {{}}
+        $retryArgs = @("install", "--id", $packageId, "--exact", "--silent", "--accept-package-agreements", "--accept-source-agreements", "--disable-interactivity", "--ignore-security-hash")
+        $proc = Start-Process -FilePath "winget" -ArgumentList $retryArgs -Wait -PassThru -NoNewWindow
+    }}
     
     if ($proc.ExitCode -eq 0 -or $proc.ExitCode -eq 3010 -or $proc.ExitCode -eq -1978335189) {{
         Write-Host " [BERHASIL]" -ForegroundColor Green
