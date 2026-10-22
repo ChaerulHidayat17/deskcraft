@@ -359,6 +359,52 @@ async def download_script(
         headers={"Content-Disposition": "attachment; filename=Setup-Workstation.ps1"}
     )
 
+@app.get("/install.bat")
+async def download_bat(
+    request: Request,
+    apps: str = Query("chrome,zoom,slack,7zip"),
+    tz: str = Query("WIB"),
+    dns: str = Query("cloudflare"),
+    pc_name: str = Query(""),
+    debloat: bool = Query(False)
+):
+    host = request.headers.get("host") or f"{get_local_ip()}:8000"
+    proto = "https" if "vercel.app" in host or "trycloudflare.com" in host or request.headers.get("x-forwarded-proto") == "https" else "http"
+    
+    clean_apps = apps.strip()
+    query = f"apps={clean_apps}&tz={tz}&dns={dns}"
+    if pc_name:
+        query += f"&pc_name={pc_name.strip()}"
+    run_url = f"{proto}://{host}/run?{query}"
+
+    bat_content = f"""@echo off
+title AutoDeploy IT - Zero-Touch Workstation Provisioning
+cls
+echo ====================================================================
+echo        AutoDeploy IT - Zero-Touch Workstation Provisioning          
+echo ====================================================================
+echo.
+echo [1/2] Menyiapkan hak akses Administrator otomatis...
+
+net session >nul 2>&1
+if %errorLevel% neq 0 (
+    echo [UAC] Mengaktifkan mode Administrator...
+    powershell -NoProfile -Command "Start-Process '%~f0' -Verb RunAs"
+    exit /b
+)
+
+echo [2/2] Hak Administrator aktif! Memulai instalasi otomatis...
+echo.
+powershell -NoProfile -ExecutionPolicy Bypass -Command "[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12; irm '{run_url}' | iex"
+echo.
+pause
+"""
+    return Response(
+        content=bat_content,
+        media_type="application/x-bat",
+        headers={"Content-Disposition": "attachment; filename=AutoDeploy-Install.bat"}
+    )
+
 @app.post("/api/report")
 async def receive_report(report: dict):
     report["timestamp"] = datetime.datetime.now().strftime("%H:%M:%S")

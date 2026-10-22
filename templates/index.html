@@ -292,12 +292,17 @@
                         Memuat perintah...
                     </div>
 
-                    <div class="flex gap-2">
-                        <button onclick="copyCommand()" class="btn-blue flex-1 py-2.5 rounded-xl text-xs font-bold transition flex items-center justify-center gap-1.5 shadow-sm active:scale-95 cursor-pointer">
+                    <a id="desktop-btn-bat" href="#" class="w-full py-3 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white rounded-xl text-xs font-extrabold transition flex items-center justify-center gap-2 shadow-lg shadow-emerald-600/25 active:scale-95 cursor-pointer text-center">
+                        <span class="text-base">⚡</span>
+                        <span>1-Klik Install Otomatis (.bat)</span>
+                    </a>
+
+                    <div class="flex gap-2 pt-0.5">
+                        <button onclick="copyCommand()" class="btn-blue flex-1 py-2 rounded-xl text-xs font-bold transition flex items-center justify-center gap-1.5 shadow-sm active:scale-95 cursor-pointer">
                             <span class="copy-label">Salin Perintah</span>
                             <span>📋</span>
                         </button>
-                        <a id="desktop-btn-download" href="#" class="px-3.5 py-2.5 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded-xl text-xs font-bold transition flex items-center justify-center gap-1" title="Download Script .ps1">
+                        <a id="desktop-btn-download" href="#" class="px-3.5 py-2 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded-xl text-xs font-bold transition flex items-center justify-center gap-1" title="Download Script .ps1">
                             <span>.ps1</span>
                         </a>
                     </div>
@@ -366,14 +371,21 @@
                 Memuat perintah...
             </div>
 
-            <div class="flex gap-2 pt-1">
-                <button onclick="copyCommand()" class="btn-blue flex-1 py-3 rounded-xl text-xs font-bold transition flex items-center justify-center gap-1.5 shadow-lg shadow-blue-500/25 active:scale-95 cursor-pointer">
-                    <span class="copy-label">Salin Perintah</span>
-                    <span class="text-sm">📋</span>
-                </button>
-                <a id="modal-btn-download" href="#" class="px-4 py-3 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded-xl text-xs font-bold transition flex items-center justify-center">
-                    Unduh .ps1
+            <div class="space-y-2 pt-1">
+                <a id="modal-btn-bat" href="#" class="w-full py-3 bg-gradient-to-r from-emerald-600 to-teal-600 active:from-emerald-700 active:to-teal-700 text-white rounded-xl text-xs font-extrabold transition flex items-center justify-center gap-2 shadow-lg shadow-emerald-600/25 active:scale-95 cursor-pointer text-center">
+                    <span class="text-base">⚡</span>
+                    <span>1-Klik Install Otomatis (.bat)</span>
                 </a>
+
+                <div class="flex gap-2">
+                    <button onclick="copyCommand()" class="btn-blue flex-1 py-2.5 rounded-xl text-xs font-bold transition flex items-center justify-center gap-1.5 shadow-sm active:scale-95 cursor-pointer">
+                        <span class="copy-label">Salin Perintah</span>
+                        <span class="text-sm">📋</span>
+                    </button>
+                    <a id="modal-btn-download" href="#" class="px-4 py-2.5 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded-xl text-xs font-bold transition flex items-center justify-center">
+                        .ps1
+                    </a>
+                </div>
             </div>
         </div>
     </div>
@@ -481,6 +493,7 @@
             const host = window.location.host;
             const url = `${protocol}//${host}/run?${query}`;
             const downloadUrl = `/download?${query}`;
+            const batUrl = `/install.bat?${query}`;
 
             const oneLineCmd = `irm "${url}" | iex`;
             
@@ -495,6 +508,12 @@
 
             const dlModal = document.getElementById('modal-btn-download');
             if (dlModal) dlModal.href = downloadUrl;
+
+            const batDesktop = document.getElementById('desktop-btn-bat');
+            if (batDesktop) batDesktop.href = batUrl;
+
+            const batModal = document.getElementById('modal-btn-bat');
+            if (batModal) batModal.href = batUrl;
         }
 
         function copyCommand() {
