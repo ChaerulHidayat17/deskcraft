@@ -1,269 +1,403 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="id" class="h-full bg-slate-50">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>AutoDeploy IT — Zero-Touch Workstation Provisioning</title>
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
     <style>
-        body { font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif; background-color: #F8FAFC; color: #0F172A; }
-        .app-card { transition: all 0.18s cubic-bezier(0.16, 1, 0.3, 1); }
-        .app-card:hover { transform: translateY(-2px); box-shadow: 0 10px 20px -5px rgba(0, 122, 255, 0.08); }
-        .app-card.selected { border-color: #007AFF; background-color: #F0F7FF; }
-        .app-card.selected .check-circle { background-color: #007AFF; border-color: #007AFF; }
-        .app-card.selected .check-icon { display: block; }
+        * {
+            -webkit-tap-highlight-color: transparent;
+            font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+        .font-mono {
+            font-family: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace !important;
+        }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+        /* Solid fallback styles ensuring zero invisible text */
+        .btn-blue {
+            background-color: #2563EB !important;
+            color: #FFFFFF !important;
+        }
+        .btn-blue:hover {
+            background-color: #1D4ED8 !important;
+        }
+        .btn-blue:active {
+            background-color: #1E40AF !important;
+            transform: scale(0.98);
+        }
+
+        /* App card interactive styles */
+        .app-row {
+            transition: all 0.18s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .app-row:active {
+            transform: scale(0.985);
+        }
+        .app-row.selected {
+            background-color: #F0F7FF !important;
+            border-color: #3B82F6 !important;
+            box-shadow: 0 4px 12px -2px rgba(37, 99, 235, 0.12) !important;
+        }
+        .app-row.selected .check-box {
+            background-color: #2563EB !important;
+            border-color: #2563EB !important;
+        }
+        .app-row.selected .check-box svg {
+            display: block !important;
+        }
+
+        /* Preset Card Active State */
+        .preset-active {
+            border-color: #2563EB !important;
+            background-color: #EFF6FF !important;
+            border-width: 2px !important;
+        }
+        .preset-active .preset-indicator {
+            background-color: #2563EB !important;
+            display: block !important;
+        }
+
+        /* Category Filter Active */
+        .cat-pill.active {
+            background-color: #2563EB !important;
+            color: #FFFFFF !important;
+        }
+
+        /* Smooth scroll indicator on mobile */
+        .scroll-mask-right {
+            mask-image: linear-gradient(to right, black 88%, transparent 100%);
+            -webkit-mask-image: linear-gradient(to right, black 88%, transparent 100%);
+        }
     </style>
 </head>
-<body class="min-h-screen flex flex-col">
+<body class="h-full flex flex-col bg-slate-50 text-slate-900 antialiased selection:bg-blue-100 selection:text-blue-900">
 
-    <!-- TOP NAVBAR -->
-    <header class="bg-white border-b border-slate-200 sticky top-0 z-30 shadow-sm/50">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+    <!-- TOP NAVIGATION BAR -->
+    <header class="sticky top-0 z-40 bg-white/85 backdrop-blur-md border-b border-slate-200/90 shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
             <div class="flex items-center space-x-3">
-                <div class="w-10 h-10 rounded-xl bg-blue-600 flex items-center justify-center text-white text-xl shadow-md shadow-blue-500/20">
+                <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-blue-600 to-indigo-500 flex items-center justify-center text-white text-xl shadow-md shadow-blue-500/20 font-bold shrink-0">
                     ⚡
                 </div>
                 <div>
-                    <h1 class="text-lg font-bold text-slate-900 leading-tight">AutoDeploy IT</h1>
-                    <p class="text-xs text-slate-500">Zero-Touch Workstation Provisioning Portal</p>
+                    <div class="flex items-center gap-2">
+                        <h1 class="text-base sm:text-lg font-extrabold tracking-tight text-slate-900 leading-none">AutoDeploy IT</h1>
+                        <span class="inline-flex px-2 py-0.5 rounded-full text-[10px] font-bold bg-blue-100 text-blue-700 uppercase tracking-wide">Enterprise</span>
+                    </div>
+                    <p class="text-[11px] sm:text-xs text-slate-500 mt-0.5 font-medium">Zero-Touch Workstation Provisioning</p>
                 </div>
             </div>
 
-            <div class="flex items-center space-x-3">
-                <span id="server-badge" class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200/60">
+            <!-- Server Status Badge & Desktop Action -->
+            <div class="flex items-center space-x-2.5">
+                <span id="server-badge" class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] sm:text-xs font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200">
                     <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-                    <span id="server-badge-text">Server: {{ local_ip }}:8000</span>
+                    <span id="server-badge-text" class="max-w-[120px] sm:max-w-none truncate">Cloud Live</span>
                 </span>
-                <button onclick="scrollToCommand()" class="px-3.5 py-1.5 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-xs font-semibold shadow-sm transition">
-                    Lihat Command 🚀
+                <button onclick="openModal()" class="hidden sm:inline-flex items-center gap-1.5 px-3.5 py-1.5 btn-blue rounded-xl text-xs font-bold shadow-sm transition">
+                    <span>Lihat Command</span>
+                    <span class="text-sm">🚀</span>
                 </button>
             </div>
         </div>
     </header>
 
-    <!-- HERO & PRESETS -->
-    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex-1">
-        <div class="mb-8">
-            <h2 class="text-2xl font-bold text-slate-900">Pilih Template Kebutuhan Karyawan</h2>
-            <p class="text-sm text-slate-500 mt-1">Pilih profil divisi untuk otomatis menandai aplikasi standar, atau pilih manual sesuai kebutuhan laptop target.</p>
-            
-            <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3 mt-4">
-                <button onclick="applyPreset('office')" id="btn-preset-office" class="preset-btn px-4 py-3 rounded-xl border border-slate-200 bg-white hover:border-blue-400 text-left transition flex flex-col justify-between shadow-sm">
-                    <span class="text-xl">🏢</span>
-                    <div class="mt-2">
-                        <div class="font-bold text-sm text-slate-900">Staff &amp; Office</div>
-                        <div class="text-xs text-slate-500">HR, Finance, Admin</div>
-                    </div>
-                </button>
-
-                <button onclick="applyPreset('developer')" id="btn-preset-developer" class="preset-btn px-4 py-3 rounded-xl border border-slate-200 bg-white hover:border-blue-400 text-left transition flex flex-col justify-between shadow-sm">
-                    <span class="text-xl">💻</span>
-                    <div class="mt-2">
-                        <div class="font-bold text-sm text-slate-900">Software Engineer</div>
-                        <div class="text-xs text-slate-500">Dev, QA, DevOps</div>
-                    </div>
-                </button>
-
-                <button onclick="applyPreset('support')" id="btn-preset-support" class="preset-btn px-4 py-3 rounded-xl border border-slate-200 bg-white hover:border-blue-400 text-left transition flex flex-col justify-between shadow-sm">
-                    <span class="text-xl">🛡️</span>
-                    <div class="mt-2">
-                        <div class="font-bold text-sm text-slate-900">IT &amp; Support</div>
-                        <div class="text-xs text-slate-500">Helpdesk &amp; Sysadmin</div>
-                    </div>
-                </button>
-
-                <button onclick="applyPreset('creative')" id="btn-preset-creative" class="preset-btn px-4 py-3 rounded-xl border border-slate-200 bg-white hover:border-blue-400 text-left transition flex flex-col justify-between shadow-sm">
-                    <span class="text-xl">🎨</span>
-                    <div class="mt-2">
-                        <div class="font-bold text-sm text-slate-900">Creative &amp; Media</div>
-                        <div class="text-xs text-slate-500">Design, Video, Writer</div>
-                    </div>
-                </button>
-
-                <button onclick="clearAll()" class="px-4 py-3 rounded-xl border border-dashed border-slate-300 bg-white hover:bg-slate-50 text-left transition flex flex-col justify-between">
-                    <span class="text-xl">🧹</span>
-                    <div class="mt-2">
-                        <div class="font-bold text-sm text-slate-700">Kosongkan Semua</div>
-                        <div class="text-xs text-slate-400">Pilih manual</div>
-                    </div>
+    <!-- MAIN SCROLLABLE CONTENT WRAPPER -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 w-full py-5 sm:py-8 flex-1 pb-32 lg:pb-12">
+        
+        <!-- SECTION 1: ROLE PRESETS -->
+        <section class="mb-6 sm:mb-8">
+            <div class="flex items-center justify-between mb-3.5">
+                <div>
+                    <h2 class="text-base sm:text-lg font-extrabold text-slate-900">Pilih Template Divisi</h2>
+                    <p class="text-xs sm:text-sm text-slate-500">Pilih paket otomatis sesuai peran kerja, atau sesuaikan manual di bawah.</p>
+                </div>
+                <button onclick="clearAll()" class="px-2.5 py-1 text-xs font-bold text-slate-500 hover:text-red-600 bg-slate-100 hover:bg-red-50 rounded-lg transition shrink-0 active:scale-95">
+                    Reset Pilihan
                 </button>
             </div>
-        </div>
 
-        <!-- MAIN LAYOUT: CATALOG + SYSTEM CONFIG -->
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <!-- Swipeable Container on Mobile, Grid on Desktop -->
+            <div class="relative">
+                <div class="flex sm:grid sm:grid-cols-4 gap-3 overflow-x-auto no-scrollbar pb-2 pt-1 -mx-4 px-4 sm:mx-0 sm:px-0 scroll-mask-right sm:mask-none">
+                    
+                    <button onclick="applyPreset('office')" id="preset-office" class="preset-btn shrink-0 w-[155px] sm:w-auto p-4 rounded-2xl border-2 border-blue-600 bg-blue-50/70 text-left transition flex flex-col justify-between shadow-sm cursor-pointer preset-active">
+                        <div class="flex items-center justify-between w-full">
+                            <span class="text-2xl">🏢</span>
+                            <span class="preset-indicator w-2.5 h-2.5 rounded-full bg-blue-600"></span>
+                        </div>
+                        <div class="mt-3">
+                            <div class="font-extrabold text-xs sm:text-sm text-slate-900">Staff &amp; Office</div>
+                            <div class="text-[11px] text-slate-500 font-medium truncate mt-0.5">HR, Finance, Admin</div>
+                        </div>
+                    </button>
 
-            <!-- LEFT 2 COLUMNS: APP CATALOG -->
-            <div class="lg:col-span-2 space-y-6">
-                <div class="flex items-center justify-between border-b border-slate-200 pb-3">
-                    <div class="flex items-center space-x-2">
-                        <h3 class="font-bold text-slate-800">Katalog Software Resmi</h3>
-                        <span id="selected-badge" class="px-2.5 py-0.5 rounded-full text-xs font-bold bg-blue-100 text-blue-700">0 dipilih</span>
+                    <button onclick="applyPreset('developer')" id="preset-developer" class="preset-btn shrink-0 w-[155px] sm:w-auto p-4 rounded-2xl border border-slate-200 bg-white text-left transition flex flex-col justify-between hover:border-slate-300 shadow-sm cursor-pointer">
+                        <div class="flex items-center justify-between w-full">
+                            <span class="text-2xl">💻</span>
+                            <span class="preset-indicator w-2.5 h-2.5 rounded-full bg-blue-600 hidden"></span>
+                        </div>
+                        <div class="mt-3">
+                            <div class="font-extrabold text-xs sm:text-sm text-slate-900">Developer</div>
+                            <div class="text-[11px] text-slate-500 font-medium truncate mt-0.5">Software, QA, DevOps</div>
+                        </div>
+                    </button>
+
+                    <button onclick="applyPreset('support')" id="preset-support" class="preset-btn shrink-0 w-[155px] sm:w-auto p-4 rounded-2xl border border-slate-200 bg-white text-left transition flex flex-col justify-between hover:border-slate-300 shadow-sm cursor-pointer">
+                        <div class="flex items-center justify-between w-full">
+                            <span class="text-2xl">🛡️</span>
+                            <span class="preset-indicator w-2.5 h-2.5 rounded-full bg-blue-600 hidden"></span>
+                        </div>
+                        <div class="mt-3">
+                            <div class="font-extrabold text-xs sm:text-sm text-slate-900">IT &amp; Support</div>
+                            <div class="text-[11px] text-slate-500 font-medium truncate mt-0.5">Helpdesk, Network</div>
+                        </div>
+                    </button>
+
+                    <button onclick="applyPreset('creative')" id="preset-creative" class="preset-btn shrink-0 w-[155px] sm:w-auto p-4 rounded-2xl border border-slate-200 bg-white text-left transition flex flex-col justify-between hover:border-slate-300 shadow-sm cursor-pointer">
+                        <div class="flex items-center justify-between w-full">
+                            <span class="text-2xl">🎨</span>
+                            <span class="preset-indicator w-2.5 h-2.5 rounded-full bg-blue-600 hidden"></span>
+                        </div>
+                        <div class="mt-3">
+                            <div class="font-extrabold text-xs sm:text-sm text-slate-900">Creative Media</div>
+                            <div class="text-[11px] text-slate-500 font-medium truncate mt-0.5">Design, Video, Audio</div>
+                        </div>
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 2: CATALOG & OS POLICIES SPLIT -->
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-8 items-start">
+
+            <!-- LEFT: SOFTWARE CATALOG (8 COLS ON DESKTOP) -->
+            <div class="lg:col-span-8 space-y-4">
+                
+                <!-- Filter Bar Header -->
+                <div class="bg-white p-3.5 sm:p-4 rounded-2xl border border-slate-200/80 shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                    <div class="flex items-center space-x-2.5">
+                        <h3 class="font-extrabold text-sm sm:text-base text-slate-900">Daftar Aplikasi</h3>
+                        <span id="selected-badge" class="px-2.5 py-0.5 rounded-full text-xs font-extrabold bg-blue-100 text-blue-700">6 dipilih</span>
                     </div>
 
-                    <!-- Category Filter -->
-                    <div class="flex space-x-1.5 text-xs font-semibold">
-                        <button onclick="filterCategory('All')" class="cat-tab px-3 py-1 rounded-lg bg-blue-600 text-white shadow-sm" data-cat="All">Semua</button>
+                    <!-- Category Pills -->
+                    <div class="flex items-center gap-1.5 overflow-x-auto no-scrollbar -mx-1 px-1">
+                        <button onclick="filterCategory('All')" class="cat-pill active px-3.5 py-1.5 rounded-xl text-xs font-bold transition shrink-0" data-cat="All">Semua</button>
                         {% for cat in categories %}
-                        <button onclick="filterCategory('{{ cat }}')" class="cat-tab px-3 py-1 rounded-lg bg-slate-100 text-slate-600 hover:bg-slate-200" data-cat="{{ cat }}">{{ cat }}</button>
+                        <button onclick="filterCategory('{{ cat }}')" class="cat-pill px-3.5 py-1.5 rounded-xl text-xs font-semibold bg-slate-100 text-slate-700 hover:bg-slate-200 transition shrink-0" data-cat="{{ cat }}">{{ cat }}</button>
                         {% endfor %}
                     </div>
                 </div>
 
                 <!-- Apps Grid -->
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3" id="catalog-grid">
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3" id="catalog-container">
                     {% for app in catalog %}
-                    <div onclick="toggleApp('{{ app.id }}')" id="card-{{ app.id }}" data-category="{{ app.category }}" class="app-card border border-slate-200 bg-white rounded-xl p-3.5 cursor-pointer flex items-start space-x-3.5 select-none shadow-sm">
-                        <div class="w-10 h-10 rounded-lg bg-slate-50 border border-slate-100 flex items-center justify-center text-xl shrink-0">
-                            {{ app.icon }}
-                        </div>
-                        <div class="flex-1 min-w-0">
-                            <div class="flex items-center justify-between">
-                                <h4 class="font-bold text-sm text-slate-900 truncate">{{ app.name }}</h4>
-                                <div class="check-circle w-4 h-4 rounded-full border border-slate-300 flex items-center justify-center shrink-0 ml-2">
-                                    <svg class="check-icon w-2.5 h-2.5 text-white hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/>
-                                    </svg>
-                                </div>
+                    <div onclick="toggleApp('{{ app.id }}')" id="app-{{ app.id }}" data-category="{{ app.category }}" class="app-row bg-white border border-slate-200/80 rounded-2xl p-3.5 cursor-pointer flex items-center justify-between space-x-3 select-none">
+                        
+                        <!-- Left: App Icon & Info -->
+                        <div class="flex items-center space-x-3.5 min-w-0">
+                            <div class="w-11 h-11 rounded-xl bg-slate-100 border border-slate-200/70 flex items-center justify-center text-2xl shrink-0">
+                                {{ app.icon }}
                             </div>
-                            <p class="text-xs text-slate-500 mt-1 line-clamp-2 leading-relaxed">{{ app.desc }}</p>
-                            <span class="inline-block mt-2 text-[10px] font-mono text-slate-400 bg-slate-50 px-1.5 py-0.5 rounded border border-slate-100">{{ app.winget }}</span>
+                            <div class="min-w-0">
+                                <div class="flex items-center gap-1.5 flex-wrap">
+                                    <h4 class="font-bold text-xs sm:text-sm text-slate-900 leading-snug">{{ app.name }}</h4>
+                                    <span class="text-[10px] font-bold text-slate-500 bg-slate-100 px-1.5 py-0.5 rounded leading-none shrink-0">{{ app.category }}</span>
+                                </div>
+                                <p class="text-[11px] text-slate-500 line-clamp-2 mt-0.5 leading-tight">{{ app.desc }}</p>
+                            </div>
+                        </div>
+
+                        <!-- Right: iOS-Style Rounded Checkbox -->
+                        <div class="check-box w-6 h-6 rounded-lg border-2 border-slate-300 flex items-center justify-center shrink-0 transition-colors">
+                            <svg class="w-3.5 h-3.5 text-white hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/>
+                            </svg>
                         </div>
                     </div>
                     {% endfor %}
                 </div>
             </div>
 
-            <!-- RIGHT 1 COLUMN: SYSTEM POLICIES & 1-LINE COMMAND -->
-            <div class="space-y-6">
-                <!-- System Tweaks Card -->
-                <div class="bg-white border border-slate-200 rounded-2xl p-5 shadow-sm space-y-4">
-                    <h3 class="font-bold text-slate-800 text-sm uppercase tracking-wider text-slate-400">Konfigurasi Sistem OS</h3>
+            <!-- RIGHT: SYSTEM OS POLICIES & DESKTOP COMMAND (4 COLS ON DESKTOP) -->
+            <div class="lg:col-span-4 space-y-5">
+                
+                <!-- System OS Policies Card -->
+                <div class="bg-white border border-slate-200/80 rounded-2xl p-4 sm:p-5 shadow-sm space-y-4">
+                    <div class="flex items-center justify-between pb-2 border-b border-slate-100">
+                        <h3 class="font-bold text-xs uppercase tracking-wider text-slate-500">Kebijakan Sistem OS</h3>
+                        <span class="text-[11px] font-bold text-blue-700 bg-blue-50 px-2 py-0.5 rounded-full">Otomatis</span>
+                    </div>
 
-                    <!-- Computer Name -->
+                    <!-- Hostname Target -->
                     <div>
-                        <label class="block text-xs font-bold text-slate-700 mb-1">Nama Hostname Laptop (Opsional)</label>
+                        <label class="block text-xs font-bold text-slate-700 mb-1">Nama Komputer Target</label>
                         <div class="flex space-x-2">
-                            <input type="text" id="cfg-pcname" placeholder="contoh: JKT-FIN-01" class="w-full text-xs px-3 py-2 border border-slate-200 rounded-lg focus:outline-none focus:border-blue-500 font-mono" oninput="updateCommand()">
-                            <button onclick="autoHostname()" class="px-2.5 py-2 text-xs bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg font-semibold shrink-0">Auto</button>
+                            <input type="text" id="cfg-pcname" placeholder="misal: JKT-FIN-01" class="w-full text-xs px-3 py-2 border border-slate-200 rounded-xl focus:outline-none focus:border-blue-500 font-mono" oninput="updateCommand()">
+                            <button onclick="autoHostname()" class="px-3 py-2 text-xs bg-slate-100 hover:bg-slate-200 text-slate-800 rounded-xl font-bold shrink-0 transition active:scale-95">Auto</button>
                         </div>
-                        <p class="text-[11px] text-slate-400 mt-1">Standarisasi nama komputer di jaringan kantor.</p>
                     </div>
 
                     <!-- Timezone -->
                     <div>
-                        <label class="block text-xs font-bold text-slate-700 mb-1">Sinkronisasi Jam &amp; Waktu</label>
-                        <select id="cfg-tz" class="w-full text-xs px-3 py-2 border border-slate-200 rounded-lg focus:outline-none focus:border-blue-500 bg-white" onchange="updateCommand()">
-                            <option value="WIB">WIB (Asia/Jakarta, GMT+7) [Rekomendasi]</option>
-                            <option value="none">Jangan ubah zona waktu</option>
+                        <label class="block text-xs font-bold text-slate-700 mb-1">Zona Waktu</label>
+                        <select id="cfg-tz" class="w-full text-xs px-3 py-2 border border-slate-200 rounded-xl focus:outline-none focus:border-blue-500 bg-white" onchange="updateCommand()">
+                            <option value="WIB">WIB (Asia/Jakarta, GMT+7)</option>
+                            <option value="none">Biarkan Default</option>
                         </select>
                     </div>
 
                     <!-- DNS -->
                     <div>
-                        <label class="block text-xs font-bold text-slate-700 mb-1">Pengaturan DNS Jaringan</label>
-                        <select id="cfg-dns" class="w-full text-xs px-3 py-2 border border-slate-200 rounded-lg focus:outline-none focus:border-blue-500 bg-white" onchange="updateCommand()">
-                            <option value="cloudflare">Cloudflare DNS (1.1.1.1, 1.0.0.1) [Cepat &amp; Aman]</option>
-                            <option value="google">Google Public DNS (8.8.8.8, 8.8.4.4)</option>
-                            <option value="none">Gunakan DNS bawaan DHCP</option>
+                        <label class="block text-xs font-bold text-slate-700 mb-1">DNS Jaringan</label>
+                        <select id="cfg-dns" class="w-full text-xs px-3 py-2 border border-slate-200 rounded-xl focus:outline-none focus:border-blue-500 bg-white" onchange="updateCommand()">
+                            <option value="cloudflare">Cloudflare (1.1.1.1) [Cepat &amp; Aman]</option>
+                            <option value="google">Google DNS (8.8.8.8)</option>
+                            <option value="none">DNS Bawaan Router</option>
                         </select>
                     </div>
 
-                    <!-- Power & Report Toggle -->
-                    <div class="pt-2 border-t border-slate-100 space-y-2 text-xs text-slate-600 font-medium">
-                        <label class="flex items-center space-x-2 cursor-pointer">
-                            <input type="checkbox" checked disabled class="rounded text-blue-600">
-                            <span>Mencegah laptop tidur saat instalasi</span>
-                        </label>
-                        <label class="flex items-center space-x-2 cursor-pointer">
-                            <input type="checkbox" checked disabled class="rounded text-blue-600">
-                            <span>Generate Laporan Audit HTML di Desktop</span>
-                        </label>
+                    <!-- Auto Features Checklist -->
+                    <div class="pt-2 border-t border-slate-100 space-y-2 text-xs text-slate-600">
+                        <div class="flex items-center gap-2">
+                            <span class="text-emerald-500 font-extrabold">✓</span>
+                            <span>Mencegah PC sleep saat setup berjalan</span>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <span class="text-emerald-500 font-extrabold">✓</span>
+                            <span>Laporan ringkasan log tersimpan di Desktop</span>
+                        </div>
                     </div>
                 </div>
 
-                <!-- 1-LINE EXECUTION BOX -->
-                <div id="command-box" class="bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-lg text-white space-y-3">
+                <!-- DESKTOP COMMAND BOX (Visible on Desktop) -->
+                <div class="hidden lg:block bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-xl text-white space-y-3.5">
                     <div class="flex items-center justify-between">
                         <div class="flex items-center space-x-2">
                             <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse"></span>
-                            <span class="text-xs font-bold uppercase tracking-wider text-slate-400">1-Line PowerShell Command</span>
+                            <span class="text-xs font-bold uppercase tracking-wider text-slate-400">PowerShell 1-Line Command</span>
                         </div>
-                        <span class="text-[11px] font-mono text-blue-400">Run as Admin</span>
+                        <span class="text-[10px] font-mono font-bold bg-blue-900/60 text-blue-300 px-2 py-0.5 rounded">Admin</span>
                     </div>
 
-                    <div class="bg-slate-950 p-3 rounded-xl border border-slate-800/80 font-mono text-xs text-slate-300 break-all select-all leading-relaxed" id="cmd-display">
-                        Memuat command...
+                    <div class="bg-slate-950 p-3.5 rounded-xl border border-slate-800 font-mono text-xs text-blue-300 break-all select-all leading-relaxed" id="desktop-cmd-display">
+                        Memuat perintah...
                     </div>
 
-                    <div class="flex space-x-2 pt-1">
-                        <button onclick="copyCommand()" id="btn-copy" class="flex-1 py-2.5 bg-blue-600 hover:bg-blue-500 text-white rounded-xl text-xs font-bold transition flex items-center justify-center space-x-1.5 shadow-sm">
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3"/></svg>
-                            <span id="btn-copy-text">Salin Perintah 📋</span>
+                    <div class="flex gap-2">
+                        <button onclick="copyCommand()" class="btn-blue flex-1 py-2.5 rounded-xl text-xs font-bold transition flex items-center justify-center gap-1.5 shadow-sm active:scale-95 cursor-pointer">
+                            <span class="copy-label">Salin Perintah</span>
+                            <span>📋</span>
                         </button>
-                        <a id="btn-download" href="#" class="px-3.5 py-2.5 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded-xl text-xs font-bold transition flex items-center justify-center space-x-1" title="Download file .ps1 untuk Flashdisk">
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
+                        <a id="desktop-btn-download" href="#" class="px-3.5 py-2.5 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded-xl text-xs font-bold transition flex items-center justify-center gap-1" title="Download Script .ps1">
                             <span>.ps1</span>
                         </a>
                     </div>
-
-                    <p class="text-[11px] text-slate-400 text-center leading-normal">
-                        Buka <b>PowerShell (Admin)</b> di laptop baru, paste perintah di atas, dan tekan <b>Enter</b>.
-                    </p>
                 </div>
 
-                <!-- RECENT TELEMETRY LOGS -->
-                <div class="bg-white border border-slate-200 rounded-2xl p-5 shadow-sm">
-                    <h4 class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-3">Aktivitas Provisioning Terakhir</h4>
-                    <div class="space-y-2.5" id="reports-container">
+                <!-- TELEMETRY AUDIT LOG -->
+                <div class="bg-white border border-slate-200/80 rounded-2xl p-4 sm:p-5 shadow-sm">
+                    <h4 class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-3">Aktivitas Terakhir</h4>
+                    <div class="space-y-2" id="reports-container">
                         {% if reports %}
                             {% for r in reports %}
                             <div class="text-xs p-2.5 rounded-xl bg-slate-50 border border-slate-100 flex items-center justify-between">
                                 <div>
                                     <span class="font-bold text-slate-800">{{ r.hostname }}</span>
-                                    <span class="text-slate-400">({{ r.user }})</span>
-                                    <div class="text-[11px] text-slate-500">{{ r.apps_installed }}/{{ r.apps_total }} aplikasi terpasang · {{ r.duration }}</div>
+                                    <div class="text-[11px] text-slate-500">{{ r.apps_installed }}/{{ r.apps_total }} aplikasi · {{ r.duration }}</div>
                                 </div>
                                 <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-100 text-emerald-700">Selesai</span>
                             </div>
                             {% endfor %}
                         {% else %}
-                            <p class="text-xs text-slate-400 italic text-center py-2">Belum ada workstation yang diprovisi hari ini.</p>
+                            <p class="text-xs text-slate-400 italic text-center py-2">Belum ada aktivitas hari ini.</p>
                         {% endif %}
                     </div>
                 </div>
+
             </div>
         </div>
     </main>
 
-    <!-- FOOTER -->
-    <footer class="bg-white border-t border-slate-200 py-6 text-center text-xs text-slate-400 mt-12">
-        AutoDeploy IT Portfolio Project · Built by Chaerul Hidayat · Zero-Touch Windows Provisioning Engine
-    </footer>
+    <!-- MOBILE STICKY BOTTOM ACTION BAR -->
+    <div class="lg:hidden fixed bottom-0 left-0 right-0 z-40 bg-white/95 backdrop-blur-md border-t border-slate-200/90 px-4 py-3 shadow-[0_-8px_25px_rgba(0,0,0,0.08)]">
+        <div class="flex items-center justify-between gap-3 max-w-md mx-auto">
+            <div>
+                <div class="text-[11px] text-slate-400 font-semibold tracking-wide">Siap Dieksekusi</div>
+                <div id="mobile-summary" class="text-xs font-extrabold text-slate-900 leading-tight">6 Aplikasi Dipilih</div>
+            </div>
+
+            <div class="flex items-center gap-2">
+                <button onclick="copyCommand()" class="btn-blue px-4 py-2.5 rounded-xl text-xs font-bold shadow-md shadow-blue-500/25 flex items-center gap-1.5 transition active:scale-95 cursor-pointer">
+                    <span class="copy-label">Salin Perintah</span>
+                    <span class="text-sm">📋</span>
+                </button>
+                <button onclick="openModal()" class="w-10 h-10 rounded-xl bg-slate-100 hover:bg-slate-200 active:bg-slate-300 text-slate-700 flex items-center justify-center font-bold text-base shrink-0 transition" title="Lihat Detail Perintah">
+                    ⚙️
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- COMMAND MODAL / BOTTOM SHEET FOR MOBILE -->
+    <div id="command-modal" class="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm hidden items-end sm:items-center justify-center p-0 sm:p-4 transition-opacity">
+        <div class="bg-slate-900 text-white w-full sm:max-w-lg rounded-t-3xl sm:rounded-3xl p-5 sm:p-6 space-y-4 shadow-2xl border border-slate-800">
+            <div class="flex items-center justify-between pb-3 border-b border-slate-800">
+                <div class="flex items-center gap-2">
+                    <span class="text-xl">🚀</span>
+                    <h3 class="font-extrabold text-sm text-slate-100">PowerShell 1-Line Command</h3>
+                </div>
+                <button onclick="closeModal()" class="w-8 h-8 rounded-full bg-slate-800 text-slate-400 hover:text-white flex items-center justify-center text-sm font-bold">✕</button>
+            </div>
+
+            <p class="text-xs text-slate-300 leading-relaxed">
+                Jalankan di <b>PowerShell (Run as Administrator)</b> pada laptop yang ingin disetting:
+            </p>
+
+            <div class="bg-slate-950 p-3.5 rounded-2xl border border-slate-800 font-mono text-xs text-blue-300 break-all select-all leading-relaxed max-h-36 overflow-y-auto" id="modal-cmd-display">
+                Memuat perintah...
+            </div>
+
+            <div class="flex gap-2 pt-1">
+                <button onclick="copyCommand()" class="btn-blue flex-1 py-3 rounded-xl text-xs font-bold transition flex items-center justify-center gap-1.5 shadow-lg shadow-blue-500/25 active:scale-95 cursor-pointer">
+                    <span class="copy-label">Salin Perintah</span>
+                    <span class="text-sm">📋</span>
+                </button>
+                <a id="modal-btn-download" href="#" class="px-4 py-3 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded-xl text-xs font-bold transition flex items-center justify-center">
+                    Unduh .ps1
+                </a>
+            </div>
+        </div>
+    </div>
 
     <!-- LOGIC SCRIPT -->
     <script>
         const PRESETS = {{ presets | tojson }};
-        const SERVER_IP = "{{ local_ip }}";
-        let selectedApps = new Set(PRESETS.office);
+        let selectedApps = new Set(PRESETS.office || ['chrome', 'zoom', 'slack', '7zip']);
 
         function updateUI() {
-            // Update card selection styling
-            document.querySelectorAll('.app-card').forEach(card => {
-                const id = card.id.replace('card-', '');
+            // Update app selection styling
+            document.querySelectorAll('.app-row').forEach(row => {
+                const id = row.id.replace('app-', '');
                 if (selectedApps.has(id)) {
-                    card.classList.add('selected');
+                    row.classList.add('selected');
                 } else {
-                    card.classList.remove('selected');
+                    row.classList.remove('selected');
                 }
             });
 
-            // Update badge
-            document.getElementById('selected-badge').innerText = `${selectedApps.size} dipilih`;
+            // Update counters
+            const countText = `${selectedApps.size} dipilih`;
+            document.getElementById('selected-badge').innerText = countText;
+            document.getElementById('mobile-summary').innerText = `${selectedApps.size} Aplikasi Dipilih`;
 
             updateCommand();
         }
@@ -280,35 +414,47 @@
         function applyPreset(name) {
             if (PRESETS[name]) {
                 selectedApps = new Set(PRESETS[name]);
-                document.querySelectorAll('.preset-btn').forEach(btn => btn.classList.remove('ring-2', 'ring-blue-500', 'border-blue-500'));
-                const active = document.getElementById(`btn-preset-${name}`);
-                if (active) active.classList.add('ring-2', 'ring-blue-500', 'border-blue-500');
+                document.querySelectorAll('.preset-btn').forEach(btn => {
+                    btn.classList.remove('preset-active');
+                    const ind = btn.querySelector('.preset-indicator');
+                    if (ind) ind.classList.add('hidden');
+                });
+                const active = document.getElementById(`preset-${name}`);
+                if (active) {
+                    active.classList.add('preset-active');
+                    const ind = active.querySelector('.preset-indicator');
+                    if (ind) ind.classList.remove('hidden');
+                }
                 updateUI();
             }
         }
 
         function clearAll() {
             selectedApps.clear();
-            document.querySelectorAll('.preset-btn').forEach(btn => btn.classList.remove('ring-2', 'ring-blue-500', 'border-blue-500'));
+            document.querySelectorAll('.preset-btn').forEach(btn => {
+                btn.classList.remove('preset-active');
+                const ind = btn.querySelector('.preset-indicator');
+                if (ind) ind.classList.add('hidden');
+            });
             updateUI();
         }
 
         function filterCategory(cat) {
-            document.querySelectorAll('.cat-tab').forEach(t => {
-                if (t.dataset.cat === cat) {
-                    t.classList.remove('bg-slate-100', 'text-slate-600');
-                    t.classList.add('bg-blue-600', 'text-white');
+            document.querySelectorAll('.cat-pill').forEach(btn => {
+                if (btn.dataset.cat === cat) {
+                    btn.classList.add('active');
+                    btn.classList.remove('bg-slate-100', 'text-slate-700');
                 } else {
-                    t.classList.remove('bg-blue-600', 'text-white');
-                    t.classList.add('bg-slate-100', 'text-slate-600');
+                    btn.classList.remove('active');
+                    btn.classList.add('bg-slate-100', 'text-slate-700');
                 }
             });
 
-            document.querySelectorAll('.app-card').forEach(card => {
-                if (cat === 'All' || card.dataset.category === cat) {
-                    card.style.display = 'flex';
+            document.querySelectorAll('.app-row').forEach(row => {
+                if (cat === 'All' || row.dataset.category === cat) {
+                    row.style.display = 'flex';
                 } else {
-                    card.style.display = 'none';
+                    row.style.display = 'none';
                 }
             });
         }
@@ -332,36 +478,57 @@
             if (pcName) query += `&pc_name=${pcName}`;
 
             const protocol = window.location.protocol;
-            const host = window.location.host || `${SERVER_IP}:8000`;
+            const host = window.location.host;
             const url = `${protocol}//${host}/run?${query}`;
             const downloadUrl = `/download?${query}`;
 
             const oneLineCmd = `irm "${url}" | iex`;
-            document.getElementById('cmd-display').innerText = oneLineCmd;
-            document.getElementById('btn-download').href = downloadUrl;
+            
+            const desktopCmd = document.getElementById('desktop-cmd-display');
+            if (desktopCmd) desktopCmd.innerText = oneLineCmd;
+
+            const modalCmd = document.getElementById('modal-cmd-display');
+            if (modalCmd) modalCmd.innerText = oneLineCmd;
+
+            const dlDesktop = document.getElementById('desktop-btn-download');
+            if (dlDesktop) dlDesktop.href = downloadUrl;
+
+            const dlModal = document.getElementById('modal-btn-download');
+            if (dlModal) dlModal.href = downloadUrl;
         }
 
         function copyCommand() {
-            const cmd = document.getElementById('cmd-display').innerText;
+            const cmd = document.getElementById('modal-cmd-display').innerText;
             navigator.clipboard.writeText(cmd).then(() => {
-                const btnText = document.getElementById('btn-copy-text');
-                btnText.innerText = "Tersalin! ✅";
+                document.querySelectorAll('.copy-label').forEach(el => el.innerText = "Tersalin! ✅");
                 setTimeout(() => {
-                    btnText.innerText = "Salin Perintah 📋";
+                    document.querySelectorAll('.copy-label').forEach(el => el.innerText = "Salin Perintah");
                 }, 2000);
             });
         }
 
-        function scrollToCommand() {
-            document.getElementById('command-box').scrollIntoView({ behavior: 'smooth' });
+        function openModal() {
+            const m = document.getElementById('command-modal');
+            m.classList.remove('hidden');
+            m.classList.add('flex');
         }
 
-        // Init on load
-        const currentHost = window.location.host;
-        const isCloud = currentHost.includes('vercel.app') || (!currentHost.includes('192.168.') && !currentHost.includes('localhost') && !currentHost.includes('127.0.0.1'));
-        const badgeSpan = document.getElementById('server-badge-text');
-        if (badgeSpan && currentHost) {
-            badgeSpan.innerText = isCloud ? `Cloud Live: ${currentHost}` : `LAN: ${currentHost}`;
+        function closeModal() {
+            const m = document.getElementById('command-modal');
+            m.classList.add('hidden');
+            m.classList.remove('flex');
+        }
+
+        // Close modal when tapping outside content
+        document.getElementById('command-modal').addEventListener('click', function(e) {
+            if (e.target === this) closeModal();
+        });
+
+        // Initialize state
+        const host = window.location.host;
+        const badge = document.getElementById('server-badge-text');
+        if (badge && host) {
+            badge.innerText = host.includes('vercel.app') ? 'Vercel Cloud' : host;
         }
         applyPreset('office');
     </script>
