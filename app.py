@@ -323,17 +323,10 @@ foreach ($pkg in $packages) {{
     }}
 }}
 
-# 6. AUTO-DEPLOY DESKTOP SHORTCUTS FOR ALL INSTALLED APPS
-Write-Host "`n[Shortcut] Menempatkan ikon aplikasi langsung ke layar Desktop..." -ForegroundColor Cyan
-$destDesktops = @([System.Environment]::GetFolderPath("Desktop"))
-if ($env:OneDrive -and (Test-Path "$env:OneDrive\\Desktop")) {{
-    $destDesktops += "$env:OneDrive\\Desktop"
-}}
+# 6. AUTO-DEPLOY DESKTOP SHORTCUTS (ANTI-DUPLICATE GUARD)
+Write-Host "`n[Shortcut] Memeriksa & menempatkan ikon aplikasi di Desktop..." -ForegroundColor Cyan
+$primaryDesktop = [System.Environment]::GetFolderPath("Desktop")
 $publicDesktop = "C:\\Users\\Public\\Desktop"
-if (Test-Path $publicDesktop) {{
-    $destDesktops += $publicDesktop
-}}
-$destDesktops = $destDesktops | Select-Object -Unique
 
 $startMenuFolders = @(
     "$env:ProgramData\\Microsoft\\Windows\\Start Menu\\Programs",
@@ -343,14 +336,21 @@ $startMenuFolders = @(
 foreach ($r in $results) {{
     if ($r.Status -eq "Success") {{
         $firstWord = $r.Name.Split(' ')[0]
-        $foundLnk = Get-ChildItem -Path $startMenuFolders -Filter "*$firstWord*.lnk" -Recurse -File -ErrorAction SilentlyContinue | Select-Object -First 1
-        if ($foundLnk) {{
-            foreach ($desk in $destDesktops) {{
-                if (Test-Path $desk) {{
-                    Copy-Item -Path $foundLnk.FullName -Destination (Join-Path $desk $foundLnk.Name) -Force -ErrorAction SilentlyContinue
-                }}
+        
+        # Check if shortcut ALREADY exists on either user desktop or public desktop
+        $existingUser = Get-ChildItem -Path $primaryDesktop -Filter "*$firstWord*.lnk" -File -ErrorAction SilentlyContinue | Select-Object -First 1
+        $existingPub  = if (Test-Path $publicDesktop) {{ Get-ChildItem -Path $publicDesktop -Filter "*$firstWord*.lnk" -File -ErrorAction SilentlyContinue | Select-Object -First 1 }} else {{ $null }}
+
+        if (-not $existingUser -and -not $existingPub) {{
+            $foundLnk = Get-ChildItem -Path $startMenuFolders -Filter "*$firstWord*.lnk" -Recurse -File -ErrorAction SilentlyContinue | Select-Object -First 1
+            if ($foundLnk) {{
+                $targetFile = Join-Path $primaryDesktop $foundLnk.Name
+                Copy-Item -Path $foundLnk.FullName -Destination $targetFile -Force -ErrorAction SilentlyContinue
+                Write-Host "  -> Ikon Desktop ditambahkan: $($foundLnk.Name)" -ForegroundColor Green
             }}
-            Write-Host "  -> Ikon Desktop aktif: $($foundLnk.Name)" -ForegroundColor Green
+        }} else {{
+            $already = if ($existingUser) {{ $existingUser.Name }} else {{ $existingPub.Name }}
+            Write-Host "  -> Ikon Desktop sudah ada: $already (Dilewati agar tidak double)" -ForegroundColor Gray
         }}
     }}
 }}
@@ -417,14 +417,8 @@ $reportHtml += @"
 </html>
 "@
 
-foreach ($desk in $destDesktops) {{
-    if (Test-Path $desk) {{
-        $reportFile = Join-Path $desk "IT-Setup-Report.html"
-        $reportHtml | Out-File -FilePath $reportFile -Encoding utf8
-    }}
-}}
-
-$desktopReport = Join-Path ([System.Environment]::GetFolderPath("Desktop")) "IT-Setup-Report.html"
+$desktopReport = Join-Path $primaryDesktop "IT-Setup-Report.html"
+$reportHtml | Out-File -FilePath $desktopReport -Encoding utf8
 Write-Host "Laporan Audit HTML disimpan di Desktop: $desktopReport" -ForegroundColor Yellow
 
 # Otomatis buka laporan di browser agar langsung tampil di depan user!
