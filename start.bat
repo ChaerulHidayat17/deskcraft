@@ -1,8 +1,8 @@
 @echo off
-title AutoDeploy IT Portal - Server
+title DeskCraft Portal - Local Server
 cd /d "%~dp0"
 echo ===================================================
-echo     AutoDeploy IT - Zero-Touch Provisioning Portal
+echo     DeskCraft - Precision Workstation Provisioning
 echo ===================================================
 echo Memulai server portal di http://192.168.1.13:8000 ...
 echo Tekan Ctrl+C untuk menghentikan server.
