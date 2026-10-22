@@ -1,3 +1,4 @@
+import os
 from fastapi import FastAPI, Request, Query
 from fastapi.responses import HTMLResponse, PlainTextResponse, Response
 from fastapi.templating import Jinja2Templates
@@ -302,7 +303,7 @@ async def run_script(
     debloat: bool = Query(False)
 ):
     host = request.headers.get("host") or f"{get_local_ip()}:8000"
-    proto = "https" if "vercel.app" in host or request.headers.get("x-forwarded-proto") == "https" else "http"
+    proto = "https" if "vercel.app" in host or "trycloudflare.com" in host or request.headers.get("x-forwarded-proto") == "https" else "http"
     script = build_ps1(apps, tz, dns, pc_name, debloat, server_host=host, protocol=proto)
     return PlainTextResponse(script, media_type="text/plain; charset=utf-8")
 
@@ -316,7 +317,7 @@ async def download_script(
     debloat: bool = Query(False)
 ):
     host = request.headers.get("host") or f"{get_local_ip()}:8000"
-    proto = "https" if "vercel.app" in host or request.headers.get("x-forwarded-proto") == "https" else "http"
+    proto = "https" if "vercel.app" in host or "trycloudflare.com" in host or request.headers.get("x-forwarded-proto") == "https" else "http"
     script = build_ps1(apps, tz, dns, pc_name, debloat, server_host=host, protocol=proto)
     return Response(
         content=script,
