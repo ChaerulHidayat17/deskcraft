@@ -292,19 +292,57 @@
                         Memuat perintah...
                     </div>
 
-                    <a id="desktop-btn-bat" href="#" class="w-full py-3 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white rounded-xl text-xs font-extrabold transition flex items-center justify-center gap-2 shadow-lg shadow-emerald-600/25 active:scale-95 cursor-pointer text-center">
-                        <span class="text-base">⚡</span>
-                        <span>1-Klik Install Otomatis (.bat)</span>
-                    </a>
-
-                    <div class="flex gap-2 pt-0.5">
-                        <button onclick="copyCommand()" class="btn-blue flex-1 py-2 rounded-xl text-xs font-bold transition flex items-center justify-center gap-1.5 shadow-sm active:scale-95 cursor-pointer">
+                    <div class="flex gap-2">
+                        <button onclick="copyCommand()" class="btn-blue flex-1 py-3 rounded-xl text-xs font-bold transition flex items-center justify-center gap-1.5 shadow-md shadow-blue-500/20 active:scale-95 cursor-pointer">
                             <span class="copy-label">Salin Perintah</span>
                             <span>📋</span>
                         </button>
-                        <a id="desktop-btn-download" href="#" class="px-3.5 py-2 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded-xl text-xs font-bold transition flex items-center justify-center gap-1" title="Download Script .ps1">
-                            <span>.ps1</span>
+                        <a id="desktop-btn-download" href="#" class="px-4 py-3 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded-xl text-xs font-bold transition flex items-center justify-center gap-1" title="Download Script .ps1">
+                            <span>Unduh .ps1</span>
                         </a>
+                    </div>
+                </div>
+
+                <!-- DOKUMENTASI CARA RUN DI POWERSHELL -->
+                <div class="bg-white border border-slate-200/80 rounded-2xl p-4 sm:p-5 shadow-sm space-y-3.5">
+                    <div class="flex items-center justify-between pb-2 border-b border-slate-100">
+                        <div class="flex items-center space-x-2">
+                            <span class="text-base">📖</span>
+                            <h3 class="font-extrabold text-xs uppercase tracking-wider text-slate-800">Panduan Menjalankan di PC</h3>
+                        </div>
+                        <span class="text-[10px] font-bold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full">3 Langkah Mudah</span>
+                    </div>
+
+                    <div class="space-y-3 text-xs">
+                        <div class="flex items-start space-x-3">
+                            <div class="w-6 h-6 rounded-full bg-blue-50 text-blue-600 font-extrabold flex items-center justify-center shrink-0 text-xs border border-blue-200/60 mt-0.5">
+                                1
+                            </div>
+                            <div class="leading-relaxed">
+                                <span class="font-bold text-slate-800">Buka PowerShell Administrator</span>
+                                <p class="text-slate-500 text-[11px] mt-0.5">Tekan tombol <kbd class="px-1.5 py-0.5 bg-slate-100 border border-slate-200 rounded font-mono text-[10px] text-slate-700">Win + X</kbd> lalu pilih <b>Terminal (Admin)</b> atau cari <i>PowerShell</i> di Start Menu &rarr; klik kanan <b>Run as administrator</b>.</p>
+                            </div>
+                        </div>
+
+                        <div class="flex items-start space-x-3">
+                            <div class="w-6 h-6 rounded-full bg-blue-50 text-blue-600 font-extrabold flex items-center justify-center shrink-0 text-xs border border-blue-200/60 mt-0.5">
+                                2
+                            </div>
+                            <div class="leading-relaxed">
+                                <span class="font-bold text-slate-800">Paste &amp; Tekan Enter</span>
+                                <p class="text-slate-500 text-[11px] mt-0.5">Klik tombol <b>Salin Perintah</b> di atas, paste ke jendela PowerShell (bisa pakai klik kanan mouse), lalu tekan <b>Enter</b>.</p>
+                            </div>
+                        </div>
+
+                        <div class="flex items-start space-x-3">
+                            <div class="w-6 h-6 rounded-full bg-blue-50 text-blue-600 font-extrabold flex items-center justify-center shrink-0 text-xs border border-blue-200/60 mt-0.5">
+                                3
+                            </div>
+                            <div class="leading-relaxed">
+                                <span class="font-bold text-slate-800">Otomatis Selesai (Zero-Touch)</span>
+                                <p class="text-slate-500 text-[11px] mt-0.5">Sistem akan mengunduh dan memasang semua aplikasi secara senyap di latar belakang. Saat selesai, laporan resmi <code class="px-1 py-0.5 bg-slate-100 rounded text-blue-600 font-mono text-[10px]">IT-Setup-Report.html</code> otomatis muncul di Desktop.</p>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
@@ -371,20 +409,26 @@
                 Memuat perintah...
             </div>
 
-            <div class="space-y-2 pt-1">
-                <a id="modal-btn-bat" href="#" class="w-full py-3 bg-gradient-to-r from-emerald-600 to-teal-600 active:from-emerald-700 active:to-teal-700 text-white rounded-xl text-xs font-extrabold transition flex items-center justify-center gap-2 shadow-lg shadow-emerald-600/25 active:scale-95 cursor-pointer text-center">
-                    <span class="text-base">⚡</span>
-                    <span>1-Klik Install Otomatis (.bat)</span>
+            <div class="flex gap-2 pt-1">
+                <button onclick="copyCommand()" class="btn-blue flex-1 py-3 rounded-xl text-xs font-bold transition flex items-center justify-center gap-1.5 shadow-lg shadow-blue-500/25 active:scale-95 cursor-pointer">
+                    <span class="copy-label">Salin Perintah</span>
+                    <span class="text-sm">📋</span>
+                </button>
+                <a id="modal-btn-download" href="#" class="px-4 py-3 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded-xl text-xs font-bold transition flex items-center justify-center">
+                    Unduh .ps1
                 </a>
+            </div>
 
-                <div class="flex gap-2">
-                    <button onclick="copyCommand()" class="btn-blue flex-1 py-2.5 rounded-xl text-xs font-bold transition flex items-center justify-center gap-1.5 shadow-sm active:scale-95 cursor-pointer">
-                        <span class="copy-label">Salin Perintah</span>
-                        <span class="text-sm">📋</span>
-                    </button>
-                    <a id="modal-btn-download" href="#" class="px-4 py-2.5 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded-xl text-xs font-bold transition flex items-center justify-center">
-                        .ps1
-                    </a>
+            <!-- Quick Instructions Inside Modal -->
+            <div class="bg-slate-950/70 p-3.5 rounded-2xl border border-slate-800/80 text-[11px] text-slate-400 space-y-2">
+                <div class="font-bold text-slate-200 flex items-center gap-1.5">
+                    <span>💡</span>
+                    <span>Cara Cepat Eksekusi:</span>
+                </div>
+                <div class="space-y-1.5 leading-relaxed text-slate-300">
+                    <p>1. Tekan <kbd class="px-1.5 py-0.5 bg-slate-800 border border-slate-700 rounded font-mono text-[10px] text-slate-200">Win + X</kbd> &rarr; pilih <b>Terminal / PowerShell (Admin)</b>.</p>
+                    <p>2. Klik tombol <b>Salin Perintah</b> di atas, lalu paste di PowerShell dan tekan <b>Enter</b>.</p>
+                    <p>3. Semua aplikasi terpasang otomatis dan laporan muncul di Desktop.</p>
                 </div>
             </div>
         </div>
@@ -508,12 +552,6 @@
 
             const dlModal = document.getElementById('modal-btn-download');
             if (dlModal) dlModal.href = downloadUrl;
-
-            const batDesktop = document.getElementById('desktop-btn-bat');
-            if (batDesktop) batDesktop.href = batUrl;
-
-            const batModal = document.getElementById('modal-btn-bat');
-            if (batModal) batModal.href = batUrl;
         }
 
         function copyCommand() {
