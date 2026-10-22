@@ -205,18 +205,18 @@ if (-not $wingetCmd) {{
 $count = 0
 foreach ($pkg in $packages) {{
     $count++
-    $pId = $pkg.winget
+    $packageId = $pkg.winget
     $pName = $pkg.name
-    Write-Host "  [$count/$($packages.Count)] Memasang $pName ($pId)..." -ForegroundColor White -NoNewline
+    Write-Host "  [$count/$($packages.Count)] Memasang $pName ($packageId)..." -ForegroundColor White -NoNewline
     
-    $proc = Start-Process -FilePath "winget" -ArgumentList "install --id $pId --exact --silent --accept-package-agreements --accept-source-agreements --disable-interactivity" -Wait -PassThru -NoNewWindow
+    $proc = Start-Process -FilePath "winget" -ArgumentList "install --id `"$packageId`" --exact --silent --accept-package-agreements --accept-source-agreements --disable-interactivity" -Wait -PassThru -NoNewWindow
     
-    if ($proc.ExitCode -eq 0 -or $proc.ExitCode -eq -1978335189) {{ # 0 = Success, -1978335189 = Already installed
+    if ($proc.ExitCode -eq 0 -or $proc.ExitCode -eq 3010 -or $proc.ExitCode -eq -1978335189) {{
         Write-Host " [BERHASIL]" -ForegroundColor Green
-        $results += [PSCustomObject]@{{ Name = $pName; ID = $pId; Status = "Success" }}
+        $results += [PSCustomObject]@{{ Name = $pName; ID = $packageId; Status = "Success" }}
     }} else {{
         Write-Host " [KODE EXIT: $($proc.ExitCode)]" -ForegroundColor Red
-        $results += [PSCustomObject]@{{ Name = $pName; ID = $pId; Status = "Failed (Code: $($proc.ExitCode))" }}
+        $results += [PSCustomObject]@{{ Name = $pName; ID = $packageId; Status = "Failed (Code: $($proc.ExitCode))" }}
     }}
 }}
 
