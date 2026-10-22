@@ -323,6 +323,48 @@ foreach ($pkg in $packages) {{
     }}
 }}
 
+# 6. AUTO-DEPLOY DESKTOP SHORTCUTS FOR ALL INSTALLED APPS
+Write-Host "`n[Shortcut] Menempatkan ikon aplikasi langsung ke layar Desktop..." -ForegroundColor Cyan
+$destDesktops = @([System.Environment]::GetFolderPath("Desktop"))
+if ($env:OneDrive -and (Test-Path "$env:OneDrive\\Desktop")) {{
+    $destDesktops += "$env:OneDrive\\Desktop"
+}}
+$publicDesktop = "C:\\Users\\Public\\Desktop"
+if (Test-Path $publicDesktop) {{
+    $destDesktops += $publicDesktop
+}}
+$destDesktops = $destDesktops | Select-Object -Unique
+
+$startMenuFolders = @(
+    "$env:ProgramData\\Microsoft\\Windows\\Start Menu\\Programs",
+    "$env:APPDATA\\Microsoft\\Windows\\Start Menu\\Programs"
+)
+
+foreach ($r in $results) {{
+    if ($r.Status -eq "Success") {{
+        $firstWord = $r.Name.Split(' ')[0]
+        $foundLnk = Get-ChildItem -Path $startMenuFolders -Filter "*$firstWord*.lnk" -Recurse -File -ErrorAction SilentlyContinue | Select-Object -First 1
+        if ($foundLnk) {{
+            foreach ($desk in $destDesktops) {{
+                if (Test-Path $desk) {{
+                    Copy-Item -Path $foundLnk.FullName -Destination (Join-Path $desk $foundLnk.Name) -Force -ErrorAction SilentlyContinue
+                }}
+            }}
+            Write-Host "  -> Ikon Desktop aktif: $($foundLnk.Name)" -ForegroundColor Green
+        }}
+    }}
+}}
+
+# Refresh Desktop icon view cache
+try {{
+    $code = @'
+    [System.Runtime.InteropServices.DllImport("shell32.dll")]
+    public static extern void SHChangeNotify(int wEventId, int uFlags, IntPtr dwItem1, IntPtr dwItem2);
+'@
+    $type = Add-Type -MemberDefinition $code -Name ShellNotification -Namespace Win32Utils -PassThru -ErrorAction SilentlyContinue
+    [Win32Utils.ShellNotification]::SHChangeNotify(0x08000000, 0, [IntPtr]::Zero, [IntPtr]::Zero)
+}} catch {{}}
+
 $startTime.Stop()
 $elapsed = $startTime.Elapsed.ToString("mm\\:ss")
 
@@ -336,11 +378,11 @@ $reportHtml = @"
 <html>
 <head>
     <meta charset="utf-8">
-    <title>IT Provisioning Audit Report</title>
+    <title>DeskCraft Provisioning Report</title>
     <style>
         body {{ font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; background: #F2F2F7; padding: 30px; color: #1C1C1E; }}
         .card {{ background: #FFFFFF; border-radius: 14px; padding: 24px; box-shadow: 0 4px 12px rgba(0,0,0,0.06); max-width: 700px; margin: 0 auto; }}
-        h1 {{ font-size: 22px; margin-top: 0; color: #007AFF; }}
+        h1 {{ font-size: 22px; margin-top: 0; color: #0070BA; }}
         .meta {{ background: #F2F2F7; border-radius: 10px; padding: 12px; margin-bottom: 20px; font-size: 13px; line-height: 1.6; }}
         table {{ width: 100%; border-collapse: collapse; margin-top: 15px; font-size: 14px; }}
         th, td {{ padding: 10px 12px; text-align: left; border-bottom: 1px solid #E5E5EA; }}
@@ -375,9 +417,20 @@ $reportHtml += @"
 </html>
 "@
 
-$desktopReport = [System.IO.Path]::Combine([System.Environment]::GetFolderPath("Desktop"), "IT-Setup-Report.html")
-$reportHtml | Out-File -FilePath $desktopReport -Encoding utf8
-Write-Host "Laporan Audit HTML disimpan di: $desktopReport" -ForegroundColor Yellow
+foreach ($desk in $destDesktops) {{
+    if (Test-Path $desk) {{
+        $reportFile = Join-Path $desk "IT-Setup-Report.html"
+        $reportHtml | Out-File -FilePath $reportFile -Encoding utf8
+    }}
+}}
+
+$desktopReport = Join-Path ([System.Environment]::GetFolderPath("Desktop")) "IT-Setup-Report.html"
+Write-Host "Laporan Audit HTML disimpan di Desktop: $desktopReport" -ForegroundColor Yellow
+
+# Otomatis buka laporan di browser agar langsung tampil di depan user!
+try {{
+    Start-Process $desktopReport
+}} catch {{}}
 
 # Post telemetry back to portal if reachable
 try {{
