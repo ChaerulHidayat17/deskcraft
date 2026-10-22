@@ -36,43 +36,62 @@ CATALOG = [
     # Office & Productivity
     {"id": "chrome", "name": "Google Chrome", "category": "Office", "icon": "🌐", "winget": "Google.Chrome", "desc": "Browser standar perusahaan dengan ekstensi keamanan."},
     {"id": "firefox", "name": "Mozilla Firefox", "category": "Office", "icon": "🦊", "winget": "Mozilla.Firefox", "desc": "Browser alternatif privasi tinggi."},
+    {"id": "brave", "name": "Brave Browser", "category": "Office", "icon": "🦁", "winget": "Brave.Brave", "desc": "Browser cepat berbasis Chromium dengan ad-blocker dan anti-tracker bawaan."},
     {"id": "zoom", "name": "Zoom Meetings", "category": "Office", "icon": "📹", "winget": "Zoom.Zoom", "desc": "Aplikasi video conference resmi kantor."},
     {"id": "slack", "name": "Slack", "category": "Office", "icon": "💬", "winget": "SlackTechnologies.Slack", "desc": "Komunikasi tim dan kolaborasi kerja."},
     {"id": "teams", "name": "Microsoft Teams", "category": "Office", "icon": "👥", "winget": "Microsoft.Teams", "desc": "Chat dan meeting ekosistem Microsoft."},
+    {"id": "telegram", "name": "Telegram Desktop", "category": "Office", "icon": "✈️", "winget": "Telegram.TelegramDesktop", "desc": "Aplikasi perpesanan instan dan sinkronisasi berkas tim kantor."},
     {"id": "7zip", "name": "7-Zip", "category": "Office", "icon": "📦", "winget": "7zip.7zip", "desc": "Kompresi dan enkripsi berkas ZIP/7z dengan password AES-256."},
     {"id": "sumatrapdf", "name": "SumatraPDF", "category": "Office", "icon": "📄", "winget": "SumatraPDF.SumatraPDF", "desc": "Reader PDF super ringan, cepat, dan hemat RAM."},
     {"id": "acrobat", "name": "Adobe Acrobat Reader", "category": "Office", "icon": "📑", "winget": "Adobe.Acrobat.Reader.64-bit", "desc": "Viewer PDF resmi untuk form dan tanda tangan digital."},
-    {"id": "libreoffice", "name": "LibreOffice", "category": "Office", "icon": "📝", "winget": "TheDocumentFoundation.LibreOffice", "desc": "Office suite gratis (Writer, Calc, Impress)."},
+    {"id": "libreoffice", "name": "LibreOffice", "category": "Office", "icon": "📝", "winget": "TheDocumentFoundation.LibreOffice", "desc": "Office suite gratis lengkap (Writer, Calc, Impress)."},
     {"id": "notion", "name": "Notion", "category": "Office", "icon": "📓", "winget": "Notion.Notion", "desc": "Workspace dokumentasi dan manajemen tugas tim."},
+    {"id": "obsidian", "name": "Obsidian", "category": "Office", "icon": "💎", "winget": "Obsidian.Obsidian", "desc": "Markdown knowledge base untuk catatan dan dokumentasi kerja."},
+    {"id": "bitwarden", "name": "Bitwarden", "category": "Office", "icon": "🛡️", "winget": "Bitwarden.Bitwarden", "desc": "Password manager enterprise aman dengan enkripsi end-to-end."},
 
     # Remote & IT Support
     {"id": "anydesk", "name": "AnyDesk", "category": "IT Support", "icon": "⚡", "winget": "AnyDeskSoftwareGmbH.AnyDesk", "desc": "Remote desktop cepat untuk asistensi jarak jauh IT Support."},
     {"id": "rustdesk", "name": "RustDesk", "category": "IT Support", "icon": "🛡️", "winget": "RustDesk.RustDesk", "desc": "Remote desktop open-source aman tanpa lisensi komersial."},
+    {"id": "teamviewer", "name": "TeamViewer", "category": "IT Support", "icon": "🌐", "winget": "TeamViewer.TeamViewer", "desc": "Platform remote support standar industri lintas sistem operasi."},
     {"id": "terminal", "name": "Windows Terminal", "category": "IT Support", "icon": "💻", "winget": "Microsoft.WindowsTerminal", "desc": "Terminal modern multi-tab untuk PowerShell dan SSH."},
     {"id": "putty", "name": "PuTTY", "category": "IT Support", "icon": "🔌", "winget": "PuTTY.PuTTY", "desc": "Klien SSH dan Telnet untuk konfigurasi server dan router."},
+    {"id": "mobaxterm", "name": "MobaXterm", "category": "IT Support", "icon": "🖥️", "winget": "Mobatek.MobaXterm", "desc": "All-in-one terminal workstation untuk SSH, X11, RDP, VNC, dan SFTP."},
     {"id": "wireshark", "name": "Wireshark", "category": "IT Support", "icon": "🦈", "winget": "WiresharkFoundation.Wireshark", "desc": "Analisis paket dan troubleshooting lalu lintas jaringan LAN."},
+    {"id": "nmap", "name": "Nmap Network Scanner", "category": "IT Support", "icon": "🔍", "winget": "Insecure.Nmap", "desc": "Tool audit keamanan jaringan, pemetaan host, dan port scanner."},
+    {"id": "advipscanner", "name": "Advanced IP Scanner", "category": "IT Support", "icon": "📡", "winget": "Famatech.AdvancedIPScanner", "desc": "Pemindai subnet LAN cepat untuk inventarisasi IP router, printer, dan PC."},
     {"id": "sysinternals", "name": "Sysinternals Suite", "category": "IT Support", "icon": "🔧", "winget": "Microsoft.Sysinternals.Suite", "desc": "Tool diagnosa tingkat lanjut (Process Explorer, Autoruns)."},
+    {"id": "rufus", "name": "Rufus", "category": "IT Support", "icon": "💾", "winget": "Rufus.Rufus", "desc": "Pembuat bootable USB flashdisk installer Windows dan Linux."},
+    {"id": "powertoys", "name": "Microsoft PowerToys", "category": "IT Support", "icon": "🧰", "winget": "Microsoft.PowerToys", "desc": "Utilitas produktivitas Windows resmi (FancyZones, Text Extractor)."},
 
     # Developer & Engineering
     {"id": "vscode", "name": "VS Code", "category": "Developer", "icon": "🟦", "winget": "Microsoft.VisualStudioCode", "desc": "Editor kode standar industri dengan ribuan ekstensi."},
+    {"id": "notepadplusplus", "name": "Notepad++", "category": "Developer", "icon": "📝", "winget": "Notepad++.Notepad++", "desc": "Editor teks ultra-ringan dengan tab untuk analisa log sistem besar."},
     {"id": "git", "name": "Git SCM", "category": "Developer", "icon": "🐙", "winget": "Git.Git", "desc": "Version control system untuk kolaborasi repository kode."},
+    {"id": "githubdesktop", "name": "GitHub Desktop", "category": "Developer", "icon": "📁", "winget": "GitHub.GitHubDesktop", "desc": "GUI resmi GitHub untuk manajemen branch, commit, dan pull request."},
     {"id": "nodejs", "name": "Node.js (LTS)", "category": "Developer", "icon": "🟢", "winget": "OpenJS.NodeJS.LTS", "desc": "JavaScript runtime untuk frontend dan backend development."},
     {"id": "python", "name": "Python 3", "category": "Developer", "icon": "🐍", "winget": "Python.Python.3.12", "desc": "Bahasa pemrograman untuk scripting, otomatisasi, dan data."},
+    {"id": "golang", "name": "Go Programming Language", "category": "Developer", "icon": "🔷", "winget": "GoLang.Go", "desc": "Compiler bahasa pemrograman Go untuk backend & microservices modern."},
     {"id": "docker", "name": "Docker Desktop", "category": "Developer", "icon": "🐳", "winget": "Docker.DockerDesktop", "desc": "Platform kontainerisasi untuk isolasi microservices."},
     {"id": "dbeaver", "name": "DBeaver CE", "category": "Developer", "icon": "🦫", "winget": "dbeaver.dbeaver", "desc": "Universal database manager (PostgreSQL, MySQL, SQLite)."},
     {"id": "postman", "name": "Postman", "category": "Developer", "icon": "🚀", "winget": "Postman.Postman", "desc": "Platform pengujian dan dokumentasi REST API."},
+    {"id": "insomnia", "name": "Insomnia REST Client", "category": "Developer", "icon": "🌙", "winget": "Insomnia.Insomnia", "desc": "Klien pengujian REST, GraphQL, dan gRPC API yang cepat dan ringan."},
 
     # Media & Creative
     {"id": "vlc", "name": "VLC Media Player", "category": "Media", "icon": "🎬", "winget": "VideoLAN.VLC", "desc": "Pemutar video dan audio universal tanpa perlu install codec."},
     {"id": "obs", "name": "OBS Studio", "category": "Media", "icon": "🎥", "winget": "OBSProject.OBSStudio", "desc": "Perekam layar untuk pembuatan video tutorial dan tutorial IT."},
-    {"id": "gimp", "name": "GIMP", "category": "Media", "icon": "🎨", "winget": "GIMP.GIMP", "desc": "Editor gambar bitmap alternatif gratis Adobe Photoshop."}
+    {"id": "figma", "name": "Figma", "category": "Media", "icon": "🎨", "winget": "Figma.Figma", "desc": "Platform desain UI/UX dan prototyping standar industri global."},
+    {"id": "gimp", "name": "GIMP", "category": "Media", "icon": "🖼️", "winget": "GIMP.GIMP", "desc": "Editor gambar bitmap alternatif gratis Adobe Photoshop."},
+    {"id": "inkscape", "name": "Inkscape", "category": "Media", "icon": "✒️", "winget": "Inkscape.Inkscape", "desc": "Editor grafik vektor profesional alternatif Adobe Illustrator."},
+    {"id": "blender", "name": "Blender", "category": "Media", "icon": "🧊", "winget": "BlenderFoundation.Blender", "desc": "Software 3D modeling, rendering, animasi, dan VFX open-source."},
+    {"id": "audacity", "name": "Audacity", "category": "Media", "icon": "🎙️", "winget": "Audacity.Audacity", "desc": "Editor dan perekam audio multi-track untuk podcast dan rekaman suara."},
+    {"id": "handbrake", "name": "HandBrake", "category": "Media", "icon": "🎞️", "winget": "HandBrake.HandBrake", "desc": "Transcoder dan kompresi video efisien untuk konten multimedia."}
 ]
 
 PRESETS = {
-    "office": ["chrome", "zoom", "slack", "7zip", "sumatrapdf", "anydesk"],
-    "developer": ["chrome", "vscode", "git", "nodejs", "python", "terminal", "7zip", "slack", "dbeaver"],
-    "support": ["anydesk", "rustdesk", "wireshark", "putty", "terminal", "7zip", "chrome", "sysinternals"],
-    "creative": ["chrome", "vlc", "obs", "gimp", "notion", "7zip", "zoom"]
+    "office": ["chrome", "zoom", "slack", "7zip", "sumatrapdf", "anydesk", "brave", "telegram", "bitwarden"],
+    "developer": ["chrome", "vscode", "git", "nodejs", "python", "terminal", "7zip", "slack", "dbeaver", "githubdesktop", "notepadplusplus", "insomnia"],
+    "support": ["anydesk", "rustdesk", "wireshark", "putty", "terminal", "7zip", "chrome", "sysinternals", "mobaxterm", "advipscanner", "nmap", "powertoys"],
+    "creative": ["chrome", "vlc", "obs", "gimp", "notion", "7zip", "zoom", "figma", "blender", "inkscape", "audacity", "handbrake"]
 }
 
 REPORTS = []
