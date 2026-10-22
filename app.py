@@ -119,7 +119,7 @@ $isAdmin = ([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIden
 if (-not $isAdmin) {{
     Write-Host "[AutoDeploy IT] Mengaktifkan hak akses Administrator otomatis..." -ForegroundColor Yellow
     $elevateCmd = "& {{ [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12; irm '{run_url}' | iex }}"
-    Start-Process powershell.exe -ArgumentList "-NoProfile -ExecutionPolicy Bypass -Command `"$elevateCmd`"" -Verb RunAs
+    Start-Process powershell.exe -ArgumentList "-NoProfile -ExecutionPolicy Bypass -NoExit -Command `"$elevateCmd`"" -Verb RunAs
     exit
 }}
 
@@ -224,6 +224,8 @@ $wingetCmd = Get-Command winget -ErrorAction SilentlyContinue
 if (-not $wingetCmd) {{
     Write-Host "CRITICAL ERROR: Windows Package Manager (winget) belum terpasang." -ForegroundColor Red
     Write-Host "Silakan update App Installer via Microsoft Store terlebih dahulu." -ForegroundColor Yellow
+    Write-Host "Tekan tombol apa saja untuk keluar..." -ForegroundColor Gray
+    try {{ $null = [Console]::ReadKey($true) }} catch {{ pause }}
     exit 1
 }}
 
@@ -324,6 +326,9 @@ try {{
 }} catch {{}}
 
 Write-Host "Semua proses selesai! Workstation siap diserahkan kepada pengguna.`n" -ForegroundColor Green
+Write-Host "=================================================================" -ForegroundColor DarkGray
+Write-Host "Tekan tombol apa saja untuk menutup jendela ini..." -ForegroundColor Yellow
+try {{ $null = [Console]::ReadKey($true) }} catch {{ pause }}
 """
     return script
 
@@ -395,8 +400,11 @@ if %errorLevel% neq 0 (
 
 echo [2/2] Hak Administrator aktif! Memulai instalasi otomatis...
 echo.
-powershell -NoProfile -ExecutionPolicy Bypass -Command "[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12; irm '{run_url}' | iex"
+powershell -NoProfile -ExecutionPolicy Bypass -NoExit -Command "[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12; irm '{run_url}' | iex"
 echo.
+echo ====================================================================
+echo Setup telah selesai!
+echo ====================================================================
 pause
 """
     return Response(
