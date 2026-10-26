@@ -20,7 +20,7 @@
         .no-scrollbar::-webkit-scrollbar { display: none; }
         .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
 
-        /* Solid fallback styles ensuring zero invisible text */
+        /* Solid button styles */
         .btn-blue {
             background-color: #2563EB !important;
             color: #FFFFFF !important;
@@ -37,13 +37,17 @@
         .app-row {
             transition: all 0.18s cubic-bezier(0.16, 1, 0.3, 1);
         }
+        .app-row:hover {
+            border-color: #CBD5E1;
+            box-shadow: 0 4px 12px -2px rgba(15, 23, 42, 0.05);
+        }
         .app-row:active {
-            transform: scale(0.985);
+            transform: scale(0.988);
         }
         .app-row.selected {
             background-color: #F0F7FF !important;
             border-color: #3B82F6 !important;
-            box-shadow: 0 4px 12px -2px rgba(37, 99, 235, 0.12) !important;
+            box-shadow: 0 4px 14px -2px rgba(37, 99, 235, 0.14) !important;
         }
         .app-row.selected .check-box {
             background-color: #2563EB !important;
@@ -58,6 +62,7 @@
             border-color: #2563EB !important;
             background-color: #EFF6FF !important;
             border-width: 2px !important;
+            box-shadow: 0 4px 14px -2px rgba(37, 99, 235, 0.12) !important;
         }
         .preset-active .preset-indicator {
             background-color: #2563EB !important;
@@ -68,6 +73,16 @@
         .cat-pill.active {
             background-color: #2563EB !important;
             color: #FFFFFF !important;
+            box-shadow: 0 2px 8px -1px rgba(37, 99, 235, 0.3) !important;
+        }
+
+        /* Toggle switch */
+        .toggle-checkbox:checked {
+            right: 0;
+            border-color: #2563EB;
+        }
+        .toggle-checkbox:checked + .toggle-label {
+            background-color: #2563EB;
         }
 
         /* Smooth scroll indicator on mobile */
@@ -80,26 +95,29 @@
 <body class="h-full flex flex-col bg-slate-50 text-slate-900 antialiased selection:bg-blue-100 selection:text-blue-900">
 
     <!-- TOP NAVIGATION BAR -->
-    <header class="sticky top-0 z-40 bg-white/85 backdrop-blur-md border-b border-slate-200/90 shadow-sm">
+    <header class="sticky top-0 z-40 bg-white/90 backdrop-blur-md border-b border-slate-200/90 shadow-sm">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
             <div class="flex items-center space-x-3">
-                <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-blue-600 to-indigo-600 flex items-center justify-center text-white text-xl shadow-md shadow-blue-500/20 font-bold shrink-0">
+                <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-blue-600 via-indigo-600 to-sky-500 flex items-center justify-center text-white text-xl shadow-md shadow-blue-500/20 font-bold shrink-0">
                     🖥️
                 </div>
                 <div>
                     <div class="flex items-center gap-2">
                         <h1 class="text-base sm:text-lg font-extrabold tracking-tight text-slate-900 leading-none">DeskCraft</h1>
-                        <span class="inline-flex px-2 py-0.5 rounded-full text-[10px] font-bold bg-blue-100 text-blue-700 uppercase tracking-wide">Enterprise</span>
+                        <span class="inline-flex px-2 py-0.5 rounded-full text-[10px] font-bold bg-blue-100 text-blue-700 uppercase tracking-wide">Enterprise 2.0</span>
                     </div>
-                    <p class="text-[11px] sm:text-xs text-slate-500 mt-0.5 font-medium">Precision Workstation Provisioning</p>
+                    <p class="text-[11px] sm:text-xs text-slate-500 mt-0.5 font-medium">Precision Workstation Provisioning Platform</p>
                 </div>
             </div>
 
             <!-- Server Status Badge & Desktop Action -->
             <div class="flex items-center space-x-2.5">
+                <span class="hidden md:inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-blue-50 text-blue-700 border border-blue-200">
+                    <span class="font-extrabold text-blue-600">{{ catalog|length }}</span> Apps Katalog
+                </span>
                 <span id="server-badge" class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] sm:text-xs font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200">
                     <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-                    <span id="server-badge-text" class="max-w-[120px] sm:max-w-none truncate">Cloud Live</span>
+                    <span id="server-badge-text" class="max-w-[120px] sm:max-w-none truncate">Server Aktif</span>
                 </span>
                 <button onclick="openModal()" class="hidden sm:inline-flex items-center gap-1.5 px-3.5 py-1.5 btn-blue rounded-xl text-xs font-bold shadow-sm transition">
                     <span>Lihat Command</span>
@@ -117,7 +135,7 @@
             <div class="flex items-center justify-between mb-3.5">
                 <div>
                     <h2 class="text-base sm:text-lg font-extrabold text-slate-900">Pilih Template Divisi</h2>
-                    <p class="text-xs sm:text-sm text-slate-500">Pilih paket otomatis sesuai peran kerja, atau sesuaikan manual di bawah.</p>
+                    <p class="text-xs sm:text-sm text-slate-500">Pilih paket otomatis sesuai peran kerja, atau sesuaikan checklist aplikasi manual di bawah.</p>
                 </div>
                 <button onclick="clearAll()" class="px-2.5 py-1 text-xs font-bold text-slate-500 hover:text-red-600 bg-slate-100 hover:bg-red-50 rounded-lg transition shrink-0 active:scale-95">
                     Reset Pilihan
@@ -128,7 +146,7 @@
             <div class="relative">
                 <div class="flex sm:grid sm:grid-cols-4 gap-3 overflow-x-auto no-scrollbar pb-2 pt-1 -mx-4 px-4 sm:mx-0 sm:px-0 scroll-mask-right sm:mask-none">
                     
-                    <button onclick="applyPreset('office')" id="preset-office" class="preset-btn shrink-0 w-[155px] sm:w-auto p-4 rounded-2xl border-2 border-blue-600 bg-blue-50/70 text-left transition flex flex-col justify-between shadow-sm cursor-pointer preset-active">
+                    <button onclick="applyPreset('office')" id="preset-office" class="preset-btn shrink-0 w-[160px] sm:w-auto p-4 rounded-2xl border-2 border-blue-600 bg-blue-50/70 text-left transition flex flex-col justify-between shadow-sm cursor-pointer preset-active">
                         <div class="flex items-center justify-between w-full">
                             <span class="text-2xl">🏢</span>
                             <span class="preset-indicator w-2.5 h-2.5 rounded-full bg-blue-600"></span>
@@ -139,7 +157,7 @@
                         </div>
                     </button>
 
-                    <button onclick="applyPreset('developer')" id="preset-developer" class="preset-btn shrink-0 w-[155px] sm:w-auto p-4 rounded-2xl border border-slate-200 bg-white text-left transition flex flex-col justify-between hover:border-slate-300 shadow-sm cursor-pointer">
+                    <button onclick="applyPreset('developer')" id="preset-developer" class="preset-btn shrink-0 w-[160px] sm:w-auto p-4 rounded-2xl border border-slate-200 bg-white text-left transition flex flex-col justify-between hover:border-slate-300 shadow-sm cursor-pointer">
                         <div class="flex items-center justify-between w-full">
                             <span class="text-2xl">💻</span>
                             <span class="preset-indicator w-2.5 h-2.5 rounded-full bg-blue-600 hidden"></span>
@@ -150,18 +168,18 @@
                         </div>
                     </button>
 
-                    <button onclick="applyPreset('support')" id="preset-support" class="preset-btn shrink-0 w-[155px] sm:w-auto p-4 rounded-2xl border border-slate-200 bg-white text-left transition flex flex-col justify-between hover:border-slate-300 shadow-sm cursor-pointer">
+                    <button onclick="applyPreset('support')" id="preset-support" class="preset-btn shrink-0 w-[160px] sm:w-auto p-4 rounded-2xl border border-slate-200 bg-white text-left transition flex flex-col justify-between hover:border-slate-300 shadow-sm cursor-pointer">
                         <div class="flex items-center justify-between w-full">
                             <span class="text-2xl">🛡️</span>
                             <span class="preset-indicator w-2.5 h-2.5 rounded-full bg-blue-600 hidden"></span>
                         </div>
                         <div class="mt-3">
                             <div class="font-extrabold text-xs sm:text-sm text-slate-900">IT &amp; Support</div>
-                            <div class="text-[11px] text-slate-500 font-medium truncate mt-0.5">Helpdesk, Network</div>
+                            <div class="text-[11px] text-slate-500 font-medium truncate mt-0.5">Helpdesk, Network, Sysadmin</div>
                         </div>
                     </button>
 
-                    <button onclick="applyPreset('creative')" id="preset-creative" class="preset-btn shrink-0 w-[155px] sm:w-auto p-4 rounded-2xl border border-slate-200 bg-white text-left transition flex flex-col justify-between hover:border-slate-300 shadow-sm cursor-pointer">
+                    <button onclick="applyPreset('creative')" id="preset-creative" class="preset-btn shrink-0 w-[160px] sm:w-auto p-4 rounded-2xl border border-slate-200 bg-white text-left transition flex flex-col justify-between hover:border-slate-300 shadow-sm cursor-pointer">
                         <div class="flex items-center justify-between w-full">
                             <span class="text-2xl">🎨</span>
                             <span class="preset-indicator w-2.5 h-2.5 rounded-full bg-blue-600 hidden"></span>
@@ -182,36 +200,68 @@
             <div class="lg:col-span-8 space-y-4">
                 
                 <!-- Filter Bar Header -->
-                <div class="bg-white p-3.5 sm:p-4 rounded-2xl border border-slate-200/80 shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-                    <div class="flex items-center space-x-2.5">
-                        <h3 class="font-extrabold text-sm sm:text-base text-slate-900">Daftar Aplikasi</h3>
-                        <span id="selected-badge" class="px-2.5 py-0.5 rounded-full text-xs font-extrabold bg-blue-100 text-blue-700">6 dipilih</span>
+                <div class="bg-white p-3.5 sm:p-4 rounded-2xl border border-slate-200/80 shadow-sm space-y-3">
+                    
+                    <!-- Top Row: Title, Counter & Search -->
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                        <div class="flex items-center space-x-2.5">
+                            <h3 class="font-extrabold text-sm sm:text-base text-slate-900">Daftar Aplikasi</h3>
+                            <span id="selected-badge" class="px-2.5 py-0.5 rounded-full text-xs font-extrabold bg-blue-100 text-blue-700">12 dipilih</span>
+                        </div>
+
+                        <!-- Search Input -->
+                        <div class="relative w-full sm:w-72">
+                            <span class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none text-slate-400 text-xs">
+                                🔍
+                            </span>
+                            <input type="text" id="app-search" placeholder="Cari nama, winget, atau fungsi..." class="w-full text-xs pl-8 pr-8 py-2 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:border-blue-500 focus:bg-white transition font-medium" oninput="filterApps()">
+                            <button id="clear-search" onclick="clearSearch()" class="hidden absolute inset-y-0 right-0 items-center pr-2.5 text-slate-400 hover:text-slate-600 text-xs font-bold">
+                                ✕
+                            </button>
+                        </div>
                     </div>
 
-                    <!-- Category Pills -->
-                    <div class="flex items-center gap-1.5 overflow-x-auto no-scrollbar -mx-1 px-1">
-                        <button onclick="filterCategory('All')" class="cat-pill active px-3.5 py-1.5 rounded-xl text-xs font-bold transition shrink-0" data-cat="All">Semua</button>
-                        {% for cat in categories %}
-                        <button onclick="filterCategory('{{ cat }}')" class="cat-pill px-3.5 py-1.5 rounded-xl text-xs font-semibold bg-slate-100 text-slate-700 hover:bg-slate-200 transition shrink-0" data-cat="{{ cat }}">{{ cat }}</button>
-                        {% endfor %}
+                    <!-- Bottom Row: Category Pills & Select All in Category -->
+                    <div class="flex flex-wrap items-center justify-between gap-2 pt-1 border-t border-slate-100">
+                        <div class="flex items-center gap-1.5 overflow-x-auto no-scrollbar -mx-1 px-1 py-0.5">
+                            <button onclick="filterCategory('All')" class="cat-pill active px-3 py-1.5 rounded-xl text-xs font-bold transition shrink-0" data-cat="All">
+                                Semua ({{ catalog|length }})
+                            </button>
+                            {% for cat in categories %}
+                            <button onclick="filterCategory('{{ cat }}')" class="cat-pill px-3 py-1.5 rounded-xl text-xs font-semibold bg-slate-100 text-slate-700 hover:bg-slate-200 transition shrink-0" data-cat="{{ cat }}">
+                                {{ cat }}
+                            </button>
+                            {% endfor %}
+                        </div>
+
+                        <div class="flex items-center gap-2">
+                            <button onclick="toggleAllVisible(true)" class="text-[11px] font-bold text-blue-600 hover:text-blue-800 transition">
+                                + Pilih Semua
+                            </button>
+                            <span class="text-slate-300">|</span>
+                            <span id="visible-count-text" class="text-[11px] font-medium text-slate-400">
+                                {{ catalog|length }} aplikasi
+                            </span>
+                        </div>
                     </div>
                 </div>
 
                 <!-- Apps Grid -->
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-3" id="catalog-container">
                     {% for app in catalog %}
-                    <div onclick="toggleApp('{{ app.id }}')" id="app-{{ app.id }}" data-category="{{ app.category }}" class="app-row bg-white border border-slate-200/80 rounded-2xl p-3.5 cursor-pointer flex items-center justify-between space-x-3 select-none">
+                    <div onclick="toggleApp('{{ app.id }}')" id="app-{{ app.id }}" data-category="{{ app.category }}" data-name="{{ app.name|lower }}" data-winget="{{ app.winget|lower }}" data-desc="{{ app.desc|lower }}" class="app-row bg-white border border-slate-200/80 rounded-2xl p-3.5 cursor-pointer flex items-center justify-between space-x-3 select-none">
                         
                         <!-- Left: App Icon & Info -->
-                        <div class="flex items-center space-x-3.5 min-w-0">
-                            <div class="w-11 h-11 rounded-xl bg-slate-100 border border-slate-200/70 flex items-center justify-center text-2xl shrink-0">
+                        <div class="flex items-center space-x-3.5 min-w-0 flex-1">
+                            <div class="w-11 h-11 rounded-xl bg-slate-50 border border-slate-200/70 flex items-center justify-center text-2xl shrink-0 shadow-sm">
                                 {{ app.icon }}
                             </div>
-                            <div class="min-w-0">
+                            <div class="min-w-0 flex-1">
                                 <div class="flex items-center gap-1.5 flex-wrap">
                                     <h4 class="font-bold text-xs sm:text-sm text-slate-900 leading-snug">{{ app.name }}</h4>
-                                    <span class="text-[10px] font-bold text-slate-500 bg-slate-100 px-1.5 py-0.5 rounded leading-none shrink-0">{{ app.category }}</span>
+                                    <span class="text-[9px] font-bold text-slate-500 bg-slate-100 px-1.5 py-0.5 rounded leading-none shrink-0">{{ app.category }}</span>
                                 </div>
+                                <div class="text-[10px] font-mono text-slate-400 truncate mt-0.5">winget: {{ app.winget }}</div>
                                 <p class="text-[11px] text-slate-500 line-clamp-2 mt-0.5 leading-tight">{{ app.desc }}</p>
                             </div>
                         </div>
@@ -225,6 +275,14 @@
                     </div>
                     {% endfor %}
                 </div>
+
+                <!-- Empty Search Fallback -->
+                <div id="empty-search-state" class="hidden bg-white border border-slate-200/80 rounded-2xl p-8 text-center space-y-2">
+                    <span class="text-3xl">🔍</span>
+                    <h4 class="font-extrabold text-sm text-slate-800">Tidak ada aplikasi yang cocok</h4>
+                    <p class="text-xs text-slate-500">Coba gunakan kata kunci lain atau bersihkan kotak pencarian.</p>
+                    <button onclick="clearSearch()" class="mt-2 px-3 py-1.5 text-xs font-bold btn-blue rounded-xl">Reset Pencarian</button>
+                </div>
             </div>
 
             <!-- RIGHT: SYSTEM OS POLICIES & DESKTOP COMMAND (4 COLS ON DESKTOP) -->
@@ -233,7 +291,10 @@
                 <!-- System OS Policies Card -->
                 <div class="bg-white border border-slate-200/80 rounded-2xl p-4 sm:p-5 shadow-sm space-y-4">
                     <div class="flex items-center justify-between pb-2 border-b border-slate-100">
-                        <h3 class="font-bold text-xs uppercase tracking-wider text-slate-500">Kebijakan Sistem OS</h3>
+                        <div class="flex items-center gap-1.5">
+                            <span class="text-sm">⚙️</span>
+                            <h3 class="font-bold text-xs uppercase tracking-wider text-slate-600">Kebijakan Sistem OS</h3>
+                        </div>
                         <span class="text-[11px] font-bold text-blue-700 bg-blue-50 px-2 py-0.5 rounded-full">Otomatis</span>
                     </div>
 
@@ -265,15 +326,33 @@
                         </select>
                     </div>
 
+                    <!-- Debloat & System Hardening Toggle -->
+                    <div class="pt-2 border-t border-slate-100">
+                        <label class="flex items-start justify-between cursor-pointer group">
+                            <div class="pr-2">
+                                <div class="text-xs font-extrabold text-slate-800 flex items-center gap-1.5">
+                                    <span>🚀</span>
+                                    <span>Optimasi &amp; Debloat OS</span>
+                                </div>
+                                <p class="text-[11px] text-slate-500 mt-0.5 leading-snug">Matikan Telemetry Microsoft, matikan Bing Search di Start Menu, &amp; munculkan ekstensi file.</p>
+                            </div>
+                            <input type="checkbox" id="cfg-debloat" class="w-4 h-4 text-blue-600 rounded border-slate-300 focus:ring-blue-500 mt-0.5 cursor-pointer" onchange="updateCommand()" checked>
+                        </label>
+                    </div>
+
                     <!-- Auto Features Checklist -->
-                    <div class="pt-2 border-t border-slate-100 space-y-2 text-xs text-slate-600">
+                    <div class="pt-2 border-t border-slate-100 space-y-1.5 text-xs text-slate-600">
                         <div class="flex items-center gap-2">
                             <span class="text-emerald-500 font-extrabold">✓</span>
-                            <span>Mencegah PC sleep saat setup berjalan</span>
+                            <span>Mencegah laptop tidur saat setup (AC &amp; Baterai)</span>
                         </div>
                         <div class="flex items-center gap-2">
                             <span class="text-emerald-500 font-extrabold">✓</span>
-                            <span>Laporan ringkasan log tersimpan di Desktop</span>
+                            <span>Ikon shortcut otomatis ditaruh di Desktop</span>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <span class="text-emerald-500 font-extrabold">✓</span>
+                            <span>Laporan HTML audit tersimpan di Desktop</span>
                         </div>
                     </div>
                 </div>
@@ -283,7 +362,7 @@
                     <div class="flex items-center justify-between">
                         <div class="flex items-center space-x-2">
                             <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse"></span>
-                            <span class="text-xs font-bold uppercase tracking-wider text-slate-400">PowerShell 1-Line Command</span>
+                            <span class="text-xs font-bold uppercase tracking-wider text-slate-300">PowerShell 1-Line Command</span>
                         </div>
                         <span class="text-[10px] font-mono font-bold bg-blue-900/60 text-blue-300 px-2 py-0.5 rounded">Admin</span>
                     </div>
@@ -320,7 +399,7 @@
                             </div>
                             <div class="leading-relaxed">
                                 <span class="font-bold text-slate-800">Buka PowerShell Administrator</span>
-                                <p class="text-slate-500 text-[11px] mt-0.5">Tekan tombol <kbd class="px-1.5 py-0.5 bg-slate-100 border border-slate-200 rounded font-mono text-[10px] text-slate-700">Win + X</kbd> lalu pilih <b>Terminal (Admin)</b> atau cari <i>PowerShell</i> di Start Menu &rarr; klik kanan <b>Run as administrator</b>.</p>
+                                <p class="text-slate-500 text-[11px] mt-0.5">Tekan <kbd class="px-1.5 py-0.5 bg-slate-100 border border-slate-200 rounded font-mono text-[10px] text-slate-700">Win + X</kbd> &rarr; pilih <b>Terminal (Admin)</b> atau buka Start Menu &rarr; ketik <i>PowerShell</i> &rarr; klik kanan <b>Run as administrator</b>.</p>
                             </div>
                         </div>
 
@@ -340,7 +419,7 @@
                             </div>
                             <div class="leading-relaxed">
                                 <span class="font-bold text-slate-800">Otomatis Selesai (Zero-Touch)</span>
-                                <p class="text-slate-500 text-[11px] mt-0.5">Sistem akan mengunduh dan memasang semua aplikasi secara senyap di latar belakang. Saat selesai, laporan resmi <code class="px-1 py-0.5 bg-slate-100 rounded text-blue-600 font-mono text-[10px]">IT-Setup-Report.html</code> otomatis muncul di Desktop.</p>
+                                <p class="text-slate-500 text-[11px] mt-0.5">Sistem mengunduh &amp; memasang semua paket di latar belakang. Saat selesai, laporan audit <code class="px-1 py-0.5 bg-slate-100 rounded text-blue-600 font-mono text-[10px]">IT-Setup-Report.html</code> otomatis muncul di Desktop.</p>
                             </div>
                         </div>
                     </div>
@@ -348,7 +427,10 @@
 
                 <!-- TELEMETRY AUDIT LOG -->
                 <div class="bg-white border border-slate-200/80 rounded-2xl p-4 sm:p-5 shadow-sm">
-                    <h4 class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-3">Aktivitas Terakhir</h4>
+                    <div class="flex items-center justify-between mb-3">
+                        <h4 class="text-xs font-bold uppercase tracking-wider text-slate-400">Aktivitas Terakhir</h4>
+                        <span class="text-[10px] text-slate-400">Audit Live</span>
+                    </div>
                     <div class="space-y-2" id="reports-container">
                         {% if reports %}
                             {% for r in reports %}
@@ -361,7 +443,7 @@
                             </div>
                             {% endfor %}
                         {% else %}
-                            <p class="text-xs text-slate-400 italic text-center py-2">Belum ada aktivitas hari ini.</p>
+                            <p class="text-xs text-slate-400 italic text-center py-2">Belum ada aktivitas baru tercatat.</p>
                         {% endif %}
                     </div>
                 </div>
@@ -375,7 +457,7 @@
         <div class="flex items-center justify-between gap-3 max-w-md mx-auto">
             <div>
                 <div class="text-[11px] text-slate-400 font-semibold tracking-wide">Siap Dieksekusi</div>
-                <div id="mobile-summary" class="text-xs font-extrabold text-slate-900 leading-tight">6 Aplikasi Dipilih</div>
+                <div id="mobile-summary" class="text-xs font-extrabold text-slate-900 leading-tight">12 Aplikasi Dipilih</div>
             </div>
 
             <div class="flex items-center gap-2">
@@ -402,7 +484,7 @@
             </div>
 
             <p class="text-xs text-slate-300 leading-relaxed">
-                Jalankan di <b>PowerShell (Run as Administrator)</b> pada laptop yang ingin disetting:
+                Jalankan di <b>PowerShell (Run as Administrator)</b> pada laptop atau PC target:
             </p>
 
             <div class="bg-slate-950 p-3.5 rounded-2xl border border-slate-800 font-mono text-xs text-blue-300 break-all select-all leading-relaxed max-h-36 overflow-y-auto" id="modal-cmd-display">
@@ -423,12 +505,12 @@
             <div class="bg-slate-950/70 p-3.5 rounded-2xl border border-slate-800/80 text-[11px] text-slate-400 space-y-2">
                 <div class="font-bold text-slate-200 flex items-center gap-1.5">
                     <span>💡</span>
-                    <span>Cara Cepat Eksekusi:</span>
+                    <span>Cara Eksekusi Cepat:</span>
                 </div>
                 <div class="space-y-1.5 leading-relaxed text-slate-300">
                     <p>1. Tekan <kbd class="px-1.5 py-0.5 bg-slate-800 border border-slate-700 rounded font-mono text-[10px] text-slate-200">Win + X</kbd> &rarr; pilih <b>Terminal / PowerShell (Admin)</b>.</p>
-                    <p>2. Klik tombol <b>Salin Perintah</b> di atas, lalu paste di PowerShell dan tekan <b>Enter</b>.</p>
-                    <p>3. Semua aplikasi terpasang otomatis dan laporan muncul di Desktop.</p>
+                    <p>2. Klik tombol <b>Salin Perintah</b> di atas, paste di PowerShell dan tekan <b>Enter</b>.</p>
+                    <p>3. Seluruh software terpasang otomatis dan laporan langsung muncul di Desktop.</p>
                 </div>
             </div>
         </div>
@@ -437,7 +519,9 @@
     <!-- LOGIC SCRIPT -->
     <script>
         const PRESETS = {{ presets | tojson }};
-        let selectedApps = new Set(PRESETS.office || ['chrome', 'zoom', 'slack', '7zip']);
+        let currentCategory = 'All';
+        let searchQuery = '';
+        let selectedApps = new Set(PRESETS.office || ['chrome', 'whatsapp', 'zoom', 'slack', '7zip']);
 
         function updateUI() {
             // Update app selection styling
@@ -451,9 +535,10 @@
             });
 
             // Update counters
-            const countText = `${selectedApps.size} dipilih`;
-            document.getElementById('selected-badge').innerText = countText;
-            document.getElementById('mobile-summary').innerText = `${selectedApps.size} Aplikasi Dipilih`;
+            const estTime = Math.max(1, Math.round(selectedApps.size * 0.4));
+            const countText = `${selectedApps.size} dipilih (~${estTime}m)`;
+            document.getElementById('selected-badge').innerText = `${selectedApps.size} dipilih`;
+            document.getElementById('mobile-summary').innerText = `${selectedApps.size} Aplikasi Dipilih (~${estTime} Menit)`;
 
             updateCommand();
         }
@@ -496,6 +581,7 @@
         }
 
         function filterCategory(cat) {
+            currentCategory = cat;
             document.querySelectorAll('.cat-pill').forEach(btn => {
                 if (btn.dataset.cat === cat) {
                     btn.classList.add('active');
@@ -505,18 +591,71 @@
                     btn.classList.add('bg-slate-100', 'text-slate-700');
                 }
             });
+            filterApps();
+        }
 
+        function filterApps() {
+            const input = document.getElementById('app-search');
+            searchQuery = (input.value || '').trim().toLowerCase();
+            
+            const clearBtn = document.getElementById('clear-search');
+            if (searchQuery) {
+                clearBtn.classList.remove('hidden');
+                clearBtn.classList.add('flex');
+            } else {
+                clearBtn.classList.add('hidden');
+                clearBtn.classList.remove('flex');
+            }
+
+            let visibleCount = 0;
             document.querySelectorAll('.app-row').forEach(row => {
-                if (cat === 'All' || row.dataset.category === cat) {
+                const cat = row.dataset.category;
+                const name = row.dataset.name || '';
+                const winget = row.dataset.winget || '';
+                const desc = row.dataset.desc || '';
+
+                const matchesCat = (currentCategory === 'All' || cat === currentCategory);
+                const matchesSearch = !searchQuery || name.includes(searchQuery) || winget.includes(searchQuery) || desc.includes(searchQuery);
+
+                if (matchesCat && matchesSearch) {
                     row.style.display = 'flex';
+                    visibleCount++;
                 } else {
                     row.style.display = 'none';
                 }
             });
+
+            document.getElementById('visible-count-text').innerText = `${visibleCount} aplikasi`;
+            const emptyState = document.getElementById('empty-search-state');
+            if (visibleCount === 0) {
+                emptyState.classList.remove('hidden');
+            } else {
+                emptyState.classList.add('hidden');
+            }
+        }
+
+        function clearSearch() {
+            const input = document.getElementById('app-search');
+            input.value = '';
+            filterApps();
+        }
+
+        function toggleAllVisible(select) {
+            document.querySelectorAll('.app-row').forEach(row => {
+                if (row.style.display !== 'none') {
+                    const id = row.id.replace('app-', '');
+                    if (select) {
+                        selectedApps.add(id);
+                    } else {
+                        selectedApps.delete(id);
+                    }
+                }
+            });
+            updateUI();
         }
 
         function autoHostname() {
-            const depts = ["FIN", "HRD", "ENG", "OPS", "MKT"];
+            const depts = ["FIN", "HRD", "ENG", "OPS", "MKT", "DEV", "IT"];
             const randDept = depts[Math.floor(Math.random() * depts.length)];
             const randNum = String(Math.floor(Math.random() * 90) + 10);
             document.getElementById('cfg-pcname').value = `JKT-${randDept}-${randNum}`;
@@ -528,16 +667,17 @@
             const appsStr = appsArr.join(',');
             const tz = document.getElementById('cfg-tz').value;
             const dns = document.getElementById('cfg-dns').value;
+            const debloat = document.getElementById('cfg-debloat').checked;
             const pcName = encodeURIComponent(document.getElementById('cfg-pcname').value.trim());
 
             let query = `apps=${appsStr}&tz=${tz}&dns=${dns}`;
             if (pcName) query += `&pc_name=${pcName}`;
+            if (debloat) query += `&debloat=true`;
 
             const protocol = window.location.protocol;
             const host = window.location.host;
             const url = `${protocol}//${host}/run?${query}`;
             const downloadUrl = `/download?${query}`;
-            const batUrl = `/install.bat?${query}`;
 
             const oneLineCmd = `irm "${url}" | iex`;
             
@@ -581,11 +721,23 @@
             if (e.target === this) closeModal();
         });
 
+        // Keyboard shortcut: '/' or 'Ctrl+K' focuses search input
+        window.addEventListener('keydown', function(e) {
+            if ((e.key === '/' || (e.ctrlKey && e.key === 'k')) && document.activeElement.tagName !== 'INPUT') {
+                e.preventDefault();
+                const searchInput = document.getElementById('app-search');
+                searchInput.focus();
+                searchInput.select();
+            } else if (e.key === 'Escape') {
+                closeModal();
+            }
+        });
+
         // Initialize state
         const host = window.location.host;
         const badge = document.getElementById('server-badge-text');
         if (badge && host) {
-            badge.innerText = host.includes('vercel.app') ? 'Vercel Cloud' : host;
+            badge.innerText = host.includes('vercel.app') ? 'Vercel Cloud' : (host.includes('192.168.') ? `LAN: ${host}` : host);
         }
         applyPreset('office');
     </script>

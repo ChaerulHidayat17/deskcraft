@@ -33,65 +33,86 @@ def get_local_ip():
         s.close()
 
 CATALOG = [
-    # Office & Productivity
+    # Office & Productivity (19)
     {"id": "chrome", "name": "Google Chrome", "category": "Office", "icon": "🌐", "winget": "Google.Chrome", "desc": "Browser standar perusahaan dengan ekstensi keamanan."},
     {"id": "firefox", "name": "Mozilla Firefox", "category": "Office", "icon": "🦊", "winget": "Mozilla.Firefox", "desc": "Browser alternatif privasi tinggi."},
     {"id": "brave", "name": "Brave Browser", "category": "Office", "icon": "🦁", "winget": "Brave.Brave", "desc": "Browser cepat berbasis Chromium dengan ad-blocker dan anti-tracker bawaan."},
-    {"id": "zoom", "name": "Zoom Meetings", "category": "Office", "icon": "📹", "winget": "Zoom.Zoom", "desc": "Aplikasi video conference resmi kantor."},
-    {"id": "slack", "name": "Slack", "category": "Office", "icon": "💬", "winget": "SlackTechnologies.Slack", "desc": "Komunikasi tim dan kolaborasi kerja."},
-    {"id": "teams", "name": "Microsoft Teams", "category": "Office", "icon": "👥", "winget": "Microsoft.Teams", "desc": "Chat dan meeting ekosistem Microsoft."},
+    {"id": "whatsapp", "name": "WhatsApp Desktop", "category": "Office", "icon": "💬", "winget": "WhatsApp.WhatsApp", "desc": "Aplikasi perpesanan instan resmi untuk koordinasi bisnis dan tim."},
     {"id": "telegram", "name": "Telegram Desktop", "category": "Office", "icon": "✈️", "winget": "Telegram.TelegramDesktop", "desc": "Aplikasi perpesanan instan dan sinkronisasi berkas tim kantor."},
+    {"id": "discord", "name": "Discord", "category": "Office", "icon": "🎧", "winget": "Discord.Discord", "desc": "Platform komunikasi chat & audio untuk komunitas developer dan tim."},
+    {"id": "zoom", "name": "Zoom Meetings", "category": "Office", "icon": "📹", "winget": "Zoom.Zoom", "desc": "Aplikasi video conference resmi kantor."},
+    {"id": "slack", "name": "Slack", "category": "Office", "icon": "💼", "winget": "SlackTechnologies.Slack", "desc": "Komunikasi tim dan kolaborasi channel kerja."},
+    {"id": "teams", "name": "Microsoft Teams", "category": "Office", "icon": "👥", "winget": "Microsoft.Teams", "desc": "Chat dan meeting ekosistem Microsoft."},
     {"id": "7zip", "name": "7-Zip", "category": "Office", "icon": "📦", "winget": "7zip.7zip", "desc": "Kompresi dan enkripsi berkas ZIP/7z dengan password AES-256."},
     {"id": "sumatrapdf", "name": "SumatraPDF", "category": "Office", "icon": "📄", "winget": "SumatraPDF.SumatraPDF", "desc": "Reader PDF super ringan, cepat, dan hemat RAM."},
     {"id": "acrobat", "name": "Adobe Acrobat Reader", "category": "Office", "icon": "📑", "winget": "Adobe.Acrobat.Reader.64-bit", "desc": "Viewer PDF resmi untuk form dan tanda tangan digital."},
-    {"id": "libreoffice", "name": "LibreOffice", "category": "Office", "icon": "📝", "winget": "TheDocumentFoundation.LibreOffice", "desc": "Office suite gratis lengkap (Writer, Calc, Impress)."},
+    {"id": "foxit", "name": "Foxit PDF Reader", "category": "Office", "icon": "📖", "winget": "Foxit.FoxitReader", "desc": "Reader PDF alternatif cepat dengan fitur anotasi & form enterprise."},
+    {"id": "wpsoffice", "name": "WPS Office", "category": "Office", "icon": "📑", "winget": "Kingsoft.WPSOffice", "desc": "Office suite alternatif lengkap, ringan, dan kompatibel dengan format MS Office."},
+    {"id": "libreoffice", "name": "LibreOffice", "category": "Office", "icon": "📝", "winget": "TheDocumentFoundation.LibreOffice", "desc": "Office suite open-source gratis lengkap (Writer, Calc, Impress)."},
     {"id": "notion", "name": "Notion", "category": "Office", "icon": "📓", "winget": "Notion.Notion", "desc": "Workspace dokumentasi dan manajemen tugas tim."},
     {"id": "obsidian", "name": "Obsidian", "category": "Office", "icon": "💎", "winget": "Obsidian.Obsidian", "desc": "Markdown knowledge base untuk catatan dan dokumentasi kerja."},
     {"id": "bitwarden", "name": "Bitwarden", "category": "Office", "icon": "🛡️", "winget": "Bitwarden.Bitwarden", "desc": "Password manager enterprise aman dengan enkripsi end-to-end."},
+    {"id": "everything", "name": "Everything Search", "category": "Office", "icon": "🔍", "winget": "voidtools.Everything", "desc": "Pencarian berkas instan secepat kilat untuk seluruh drive Windows."},
 
-    # Remote & IT Support
+    # Remote & IT Support (18)
     {"id": "anydesk", "name": "AnyDesk", "category": "IT Support", "icon": "⚡", "winget": "AnyDeskSoftwareGmbH.AnyDesk", "desc": "Remote desktop cepat untuk asistensi jarak jauh IT Support."},
     {"id": "rustdesk", "name": "RustDesk", "category": "IT Support", "icon": "🛡️", "winget": "RustDesk.RustDesk", "desc": "Remote desktop open-source aman tanpa lisensi komersial."},
     {"id": "teamviewer", "name": "TeamViewer", "category": "IT Support", "icon": "🌐", "winget": "TeamViewer.TeamViewer", "desc": "Platform remote support standar industri lintas sistem operasi."},
     {"id": "terminal", "name": "Windows Terminal", "category": "IT Support", "icon": "💻", "winget": "Microsoft.WindowsTerminal", "desc": "Terminal modern multi-tab untuk PowerShell dan SSH."},
     {"id": "putty", "name": "PuTTY", "category": "IT Support", "icon": "🔌", "winget": "PuTTY.PuTTY", "desc": "Klien SSH dan Telnet untuk konfigurasi server dan router."},
     {"id": "mobaxterm", "name": "MobaXterm", "category": "IT Support", "icon": "🖥️", "winget": "Mobatek.MobaXterm", "desc": "All-in-one terminal workstation untuk SSH, X11, RDP, VNC, dan SFTP."},
+    {"id": "winscp", "name": "WinSCP", "category": "IT Support", "icon": "🚀", "winget": "WinSCP.WinSCP", "desc": "SFTP & FTP client untuk transfer berkas aman ke server Linux/SSH."},
     {"id": "wireshark", "name": "Wireshark", "category": "IT Support", "icon": "🦈", "winget": "WiresharkFoundation.Wireshark", "desc": "Analisis paket dan troubleshooting lalu lintas jaringan LAN."},
     {"id": "nmap", "name": "Nmap Network Scanner", "category": "IT Support", "icon": "🔍", "winget": "Insecure.Nmap", "desc": "Tool audit keamanan jaringan, pemetaan host, dan port scanner."},
     {"id": "advipscanner", "name": "Advanced IP Scanner", "category": "IT Support", "icon": "📡", "winget": "Famatech.AdvancedIPScanner", "desc": "Pemindai subnet LAN cepat untuk inventarisasi IP router, printer, dan PC."},
-    {"id": "sysinternals", "name": "Sysinternals Suite", "category": "IT Support", "icon": "🔧", "winget": "Microsoft.Sysinternals.Suite", "desc": "Tool diagnosa tingkat lanjut (Process Explorer, Autoruns)."},
-    {"id": "rufus", "name": "Rufus", "category": "IT Support", "icon": "💾", "winget": "Rufus.Rufus", "desc": "Pembuat bootable USB flashdisk installer Windows dan Linux."},
-    {"id": "powertoys", "name": "Microsoft PowerToys", "category": "IT Support", "icon": "🧰", "winget": "Microsoft.PowerToys", "desc": "Utilitas produktivitas Windows resmi (FancyZones, Text Extractor)."},
+    {"id": "crystaldisk", "name": "CrystalDiskInfo", "category": "IT Support", "icon": "💾", "winget": "CrystalDewWorld.CrystalDiskInfo", "desc": "Diagnostik kesehatan HDD/SSD S.M.A.R.T untuk deteksi bad sector & umur disk."},
+    {"id": "hwinfo", "name": "HWiNFO", "category": "IT Support", "icon": "📊", "winget": "REALiX.HWiNFO", "desc": "Monitoring hardware mendalam, temperatur, voltase, dan sensor sistem."},
+    {"id": "treesize", "name": "TreeSize Free", "category": "IT Support", "icon": "🌲", "winget": "JAMSoftware.TreeSize.Free", "desc": "Penganalisis kapasitas harddisk untuk menemukan file & folder raksasa pemakan storage."},
+    {"id": "wireguard", "name": "WireGuard", "category": "IT Support", "icon": "🔒", "winget": "WireGuard.WireGuard", "desc": "Klien VPN modern ultra cepat dan aman untuk koneksi remote LAN perusahaan."},
+    {"id": "sysinternals", "name": "Sysinternals Suite", "category": "IT Support", "icon": "🔧", "winget": "Microsoft.Sysinternals.Suite", "desc": "Tool diagnosa tingkat lanjut Windows (Process Explorer, Autoruns)."},
+    {"id": "rufus", "name": "Rufus", "category": "IT Support", "icon": "💽", "winget": "Rufus.Rufus", "desc": "Pembuat bootable USB flashdisk installer Windows dan Linux."},
+    {"id": "ventoy", "name": "Ventoy", "category": "IT Support", "icon": "📀", "winget": "Ventoy.Ventoy", "desc": "Alat pembuat flashdisk multiboot ISO tanpa perlu format ulang berulang kali."},
+    {"id": "powertoys", "name": "Microsoft PowerToys", "category": "IT Support", "icon": "🧰", "winget": "Microsoft.PowerToys", "desc": "Utilitas produktivitas Windows resmi (FancyZones, Text Extractor, Awake)."},
 
-    # Developer & Engineering
+    # Developer & Engineering (16)
     {"id": "vscode", "name": "VS Code", "category": "Developer", "icon": "🟦", "winget": "Microsoft.VisualStudioCode", "desc": "Editor kode standar industri dengan ribuan ekstensi."},
+    {"id": "cursor", "name": "Cursor AI", "category": "Developer", "icon": "✨", "winget": "Anysphere.Cursor", "desc": "AI-first code editor berbasis VS Code untuk akselerasi coding dengan model AI."},
     {"id": "notepadplusplus", "name": "Notepad++", "category": "Developer", "icon": "📝", "winget": "Notepad++.Notepad++", "desc": "Editor teks ultra-ringan dengan tab untuk analisa log sistem besar."},
+    {"id": "sublime", "name": "Sublime Text 4", "category": "Developer", "icon": "⚡", "winget": "SublimeHQ.SublimeText.4", "desc": "Teks editor ultra cepat, ringan, responsif, dan hemat memori."},
     {"id": "git", "name": "Git SCM", "category": "Developer", "icon": "🐙", "winget": "Git.Git", "desc": "Version control system untuk kolaborasi repository kode."},
     {"id": "githubdesktop", "name": "GitHub Desktop", "category": "Developer", "icon": "📁", "winget": "GitHub.GitHubDesktop", "desc": "GUI resmi GitHub untuk manajemen branch, commit, dan pull request."},
+    {"id": "gitkraken", "name": "GitKraken", "category": "Developer", "icon": "🐙", "winget": "Axosoft.GitKraken", "desc": "GUI Git client visual yang intuitif untuk git workflow tim."},
+    {"id": "filezilla", "name": "FileZilla Client", "category": "Developer", "icon": "📂", "winget": "TimKosse.FileZilla.Client", "desc": "FTP, FTPS, dan SFTP client untuk transfer file server web."},
     {"id": "nodejs", "name": "Node.js (LTS)", "category": "Developer", "icon": "🟢", "winget": "OpenJS.NodeJS.LTS", "desc": "JavaScript runtime untuk frontend dan backend development."},
     {"id": "python", "name": "Python 3", "category": "Developer", "icon": "🐍", "winget": "Python.Python.3.12", "desc": "Bahasa pemrograman untuk scripting, otomatisasi, dan data."},
     {"id": "golang", "name": "Go Programming Language", "category": "Developer", "icon": "🔷", "winget": "GoLang.Go", "desc": "Compiler bahasa pemrograman Go untuk backend & microservices modern."},
+    {"id": "temurin17", "name": "Eclipse Temurin JDK 17", "category": "Developer", "icon": "☕", "winget": "EclipseAdoptium.Temurin.17.JDK", "desc": "Java SE Development Kit LTS standar industri enterprise & Android development."},
     {"id": "docker", "name": "Docker Desktop", "category": "Developer", "icon": "🐳", "winget": "Docker.DockerDesktop", "desc": "Platform kontainerisasi untuk isolasi microservices."},
-    {"id": "dbeaver", "name": "DBeaver CE", "category": "Developer", "icon": "🦫", "winget": "dbeaver.dbeaver", "desc": "Universal database manager (PostgreSQL, MySQL, SQLite)."},
+    {"id": "dbeaver", "name": "DBeaver CE", "category": "Developer", "icon": "🦫", "winget": "dbeaver.dbeaver", "desc": "Universal database manager (PostgreSQL, MySQL, SQLite, MongoDB)."},
     {"id": "postman", "name": "Postman", "category": "Developer", "icon": "🚀", "winget": "Postman.Postman", "desc": "Platform pengujian dan dokumentasi REST API."},
     {"id": "insomnia", "name": "Insomnia REST Client", "category": "Developer", "icon": "🌙", "winget": "Insomnia.Insomnia", "desc": "Klien pengujian REST, GraphQL, dan gRPC API yang cepat dan ringan."},
 
-    # Media & Creative
-    {"id": "vlc", "name": "VLC Media Player", "category": "Media", "icon": "🎬", "winget": "VideoLAN.VLC", "desc": "Pemutar video dan audio universal tanpa perlu install codec."},
-    {"id": "obs", "name": "OBS Studio", "category": "Media", "icon": "🎥", "winget": "OBSProject.OBSStudio", "desc": "Perekam layar untuk pembuatan video tutorial dan tutorial IT."},
+    # Media & Creative (13)
+    {"id": "vlc", "name": "VLC Media Player", "category": "Media", "icon": "🎬", "winget": "VideoLAN.VLC", "desc": "Pemutar video dan audio universal tanpa perlu install codec eksternal."},
+    {"id": "potplayer", "name": "PotPlayer", "category": "Media", "icon": "▶️", "winget": "Daum.PotPlayer", "desc": "Pemutar video alternatif super ringan dengan dukungan codec terlengkap."},
+    {"id": "spotify", "name": "Spotify", "category": "Media", "icon": "🎵", "winget": "Spotify.Spotify", "desc": "Aplikasi streaming musik dan podcast harian untuk fokus kerja."},
+    {"id": "sharex", "name": "ShareX", "category": "Media", "icon": "📸", "winget": "ShareX.ShareX", "desc": "Tool screen capture, video recording, dan anotasi terlengkap untuk dokumentasi IT."},
+    {"id": "obs", "name": "OBS Studio", "category": "Media", "icon": "🎥", "winget": "OBSProject.OBSStudio", "desc": "Perekam layar untuk pembuatan video tutorial dan live streaming."},
     {"id": "figma", "name": "Figma", "category": "Media", "icon": "🎨", "winget": "Figma.Figma", "desc": "Platform desain UI/UX dan prototyping standar industri global."},
+    {"id": "capcut", "name": "CapCut Desktop", "category": "Media", "icon": "✂️", "winget": "ByteDance.CapCut", "desc": "Editor video cepat dan populer untuk kreator konten sosial media & presentasi."},
     {"id": "gimp", "name": "GIMP", "category": "Media", "icon": "🖼️", "winget": "GIMP.GIMP", "desc": "Editor gambar bitmap alternatif gratis Adobe Photoshop."},
     {"id": "inkscape", "name": "Inkscape", "category": "Media", "icon": "✒️", "winget": "Inkscape.Inkscape", "desc": "Editor grafik vektor profesional alternatif Adobe Illustrator."},
+    {"id": "krita", "name": "Krita", "category": "Media", "icon": "🖌️", "winget": "KDE.Krita", "desc": "Aplikasi digital painting dan raster graphics open-source profesional."},
     {"id": "blender", "name": "Blender", "category": "Media", "icon": "🧊", "winget": "BlenderFoundation.Blender", "desc": "Software 3D modeling, rendering, animasi, dan VFX open-source."},
     {"id": "audacity", "name": "Audacity", "category": "Media", "icon": "🎙️", "winget": "Audacity.Audacity", "desc": "Editor dan perekam audio multi-track untuk podcast dan rekaman suara."},
     {"id": "handbrake", "name": "HandBrake", "category": "Media", "icon": "🎞️", "winget": "HandBrake.HandBrake", "desc": "Transcoder dan kompresi video efisien untuk konten multimedia."}
 ]
 
 PRESETS = {
-    "office": ["chrome", "zoom", "slack", "7zip", "sumatrapdf", "anydesk", "brave", "telegram", "bitwarden"],
-    "developer": ["chrome", "vscode", "git", "nodejs", "python", "terminal", "7zip", "slack", "dbeaver", "githubdesktop", "notepadplusplus", "insomnia"],
-    "support": ["anydesk", "rustdesk", "wireshark", "putty", "terminal", "7zip", "chrome", "sysinternals", "mobaxterm", "advipscanner", "nmap", "powertoys"],
-    "creative": ["chrome", "vlc", "obs", "gimp", "notion", "7zip", "zoom", "figma", "blender", "inkscape", "audacity", "handbrake"]
+    "office": ["chrome", "whatsapp", "zoom", "slack", "7zip", "sumatrapdf", "anydesk", "brave", "telegram", "bitwarden", "everything", "wpsoffice"],
+    "developer": ["chrome", "vscode", "cursor", "git", "nodejs", "python", "terminal", "7zip", "slack", "dbeaver", "githubdesktop", "notepadplusplus", "insomnia", "postman", "filezilla"],
+    "support": ["anydesk", "rustdesk", "winscp", "wireshark", "putty", "terminal", "7zip", "chrome", "sysinternals", "mobaxterm", "advipscanner", "crystaldisk", "hwinfo", "treesize", "wireguard", "ventoy", "powertoys"],
+    "creative": ["chrome", "vlc", "potplayer", "spotify", "sharex", "obs", "figma", "capcut", "gimp", "notion", "7zip", "zoom", "blender", "inkscape", "audacity", "handbrake"]
 }
 
 REPORTS = []
@@ -125,6 +146,8 @@ def build_ps1(apps_str: str, tz: str = "WIB", dns: str = "cloudflare", pc_name: 
     query_params = f"apps={apps_str}&tz={tz}&dns={dns}"
     if pc_name:
         query_params += f"&pc_name={pc_name}"
+    if debloat:
+        query_params += "&debloat=true"
     run_url = f"{protocol}://{server_host}/run?{query_params}"
 
     script = f"""# ==============================================================================
@@ -180,9 +203,32 @@ try {{
     powercfg /change monitor-timeout-dc 15 2>$null
     Write-Host "      Power plan berhasil dioptimalkan (AC & Baterai Laptop)." -ForegroundColor Green
 }} catch {{}}
-
-# 2. CONFIGURE TIMEZONE
 """
+
+    # 2. OPTIONAL DEBLOAT & SYSTEM HARDENING
+    if debloat:
+        script += """try {
+    Write-Host "[Debloat] Menerapkan Kebijakan Optimasi & Debloat Windows Baseline..." -ForegroundColor Cyan
+    # Matikan Telemetry & Diagnostic Data Tracking
+    Set-ItemProperty -Path "HKLM:\\SOFTWARE\\Policies\\Microsoft\\Windows\\DataCollection" -Name "AllowTelemetry" -Type DWord -Value 0 -Force -ErrorAction SilentlyContinue
+    Stop-Service -Name "DiagTrack" -WarningAction SilentlyContinue -ErrorAction SilentlyContinue
+    Set-Service -Name "DiagTrack" -StartupType Disabled -ErrorAction SilentlyContinue
+
+    # Matikan Bing Search di Start Menu
+    Set-ItemProperty -Path "HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\Search" -Name "BingSearchEnabled" -Type DWord -Value 0 -Force -ErrorAction SilentlyContinue
+
+    # Matikan Auto-Install Sponsored Consumer Apps (Candy Crush, dll)
+    Set-ItemProperty -Path "HKLM:\\SOFTWARE\\Policies\\Microsoft\\Windows\\CloudContent" -Name "DisableWindowsConsumerFeatures" -Type DWord -Value 1 -Force -ErrorAction SilentlyContinue
+
+    # Tampilkan ekstensi file (.exe, .txt) di File Explorer
+    Set-ItemProperty -Path "HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Advanced" -Name "HideFileExt" -Type DWord -Value 0 -Force -ErrorAction SilentlyContinue
+    Write-Host "      Optimasi Baseline & Debloat berhasil diterapkan." -ForegroundColor Green
+} catch {
+    Write-Host "      Peringatan: Sebagian pengaturan debloat dilewati." -ForegroundColor Yellow
+}
+"""
+
+    # 3. CONFIGURE TIMEZONE
     if tz == "WIB":
         script += """try {
     Write-Host "[2/5] Mengatur zona waktu ke WIB (Asia/Jakarta)..." -ForegroundColor Cyan
@@ -503,6 +549,8 @@ async def download_bat(
     query = f"apps={clean_apps}&tz={tz}&dns={dns}"
     if pc_name:
         query += f"&pc_name={pc_name.strip()}"
+    if debloat:
+        query += "&debloat=true"
     run_url = f"{proto}://{host}/run?{query}"
 
     bat_content = f"""@echo off
