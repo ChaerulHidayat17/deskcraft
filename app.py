@@ -130,6 +130,10 @@ async def index(request: Request):
             "presets": PRESETS,
             "local_ip": local_ip,
             "reports": REPORTS[:10]
+        },
+        headers={
+            "Cache-Control": "no-cache, no-store, must-revalidate",
+            "Pragma": "no-cache"
         }
     )
 
